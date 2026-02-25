@@ -30,9 +30,9 @@ interface ConfigState {
   setWorkloadType: (type: WorkloadType) => void;
 
   // UI state
-  activeTab: 'profiles' | 'density' | 'recommendations' | 'config';
+  activeTab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity';
   setActiveTab: (
-    tab: 'profiles' | 'density' | 'recommendations' | 'config'
+    tab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity'
   ) => void;
 }
 

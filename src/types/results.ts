@@ -29,3 +29,12 @@ export interface RecommendationResult {
   workloadType: WorkloadType;
   densityResult: DensityResult;
 }
+
+export interface ReversePlanResult {
+  profile: VgpuProfile;
+  hostsNeeded: number;
+  gpusNeeded: number;
+  cardsNeeded: number;
+  instancesPerHost: number;
+  gpuUtilization: number; // fraction 0..1: vmTarget / (hostsNeeded × instancesPerHost)
+}

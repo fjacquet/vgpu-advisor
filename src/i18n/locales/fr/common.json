@@ -8,7 +8,8 @@
     "profiles": "Profils",
     "density": "Densité",
     "recommendations": "Recommandations",
-    "config": "Extrait de config"
+    "config": "Extrait de config",
+    "capacity": "Plan de capacité"
   },
   "gpu": {
     "selector": "Sélectionner le GPU",
@@ -78,10 +79,24 @@
     "noGpu": "Sélectionnez un GPU pour obtenir des recommandations"
   },
   "config": {
-    "title": "Extrait de config Horizon",
+    "title": "Extrait de config",
     "description": "Ajoutez ces lignes à graphic-profiles.properties sur votre serveur Horizon Connection pour enregistrer le profil vGPU.",
     "copy": "Copier la config",
-    "noGpu": "Sélectionnez un GPU et un profil pour générer l'extrait de configuration"
+    "noGpu": "Sélectionnez un GPU et un profil pour générer l'extrait de configuration",
+    "platformHorizon": "Horizon",
+    "platformCitrix": "Citrix / XenServer",
+    "citrixDescription": "Commandes xe XenServer pour l'assignation vGPU par VM. Les noms de profils sont identiques à Horizon."
+  },
+  "capacity": {
+    "title": "Plan de capacité inverse",
+    "description": "Quelle infrastructure est nécessaire pour servir votre nombre cible de VMs ?",
+    "hostsNeeded": "Hôtes",
+    "gpusNeeded": "GPUs",
+    "cardsNeeded": "Cartes",
+    "vmsPerHost": "VMs / hôte",
+    "utilization": "Utilisation",
+    "optimal": "Plus efficace",
+    "noGpu": "Sélectionnez un GPU pour voir le plan de capacité"
   },
   "share": {
     "button": "Partager",
