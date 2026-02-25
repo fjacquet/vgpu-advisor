@@ -1,11 +1,17 @@
 {
-  "name": "vgpu-advisor",
+  "name": "@fjacquet/vgpu-advisor",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:docker": "tsc -b && vite build --base /",
     "preview": "vite preview",
     "lint": "biome check src",
     "format": "biome format --write src",
