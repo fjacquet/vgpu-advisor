@@ -10,6 +10,8 @@ export interface PersistedState {
   hostCount: number;
   workloadType: string;
   vmTarget: number;
+  capacitySeries: string;
+  capacityVramGb: number;
 }
 
 export function saveToUrl(state: PersistedState): void {
