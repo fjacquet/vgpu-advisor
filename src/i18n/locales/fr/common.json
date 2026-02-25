@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "vGPU Advisor",
+    "subtitle": "Calculateur de profils vGPU NVIDIA pour Omnissa Horizon",
+    "tagline": "Choisissez le bon profil vGPU pour votre déploiement VDI"
+  },
+  "nav": {
+    "profiles": "Profils",
+    "density": "Densité",
+    "recommendations": "Recommandations",
+    "config": "Extrait de config"
+  },
+  "gpu": {
+    "selector": "Sélectionner le GPU",
+    "selectPlaceholder": "Choisir un modèle de GPU...",
+    "architecture": "Architecture",
+    "vram": "VRAM",
+    "gpuCount": "GPUs/carte",
+    "slotWidth": "Largeur de slot",
+    "cooling": "Refroidissement",
+    "tdp": "TDP",
+    "notes": "Notes",
+    "sw": "Simple largeur",
+    "dw": "Double largeur",
+    "active": "Actif",
+    "passive": "Passif"
+  },
+  "profiles": {
+    "filter": "Filtre de profils",
+    "series": "Série",
+    "all": "Tous",
+    "noSelection": "Sélectionnez un GPU pour voir les profils disponibles",
+    "noProfiles": "Aucun profil ne correspond au filtre actuel",
+    "vram": "Framebuffer",
+    "instances": "VMs max/GPU",
+    "displays": "Écrans",
+    "resolution": "Résolution max",
+    "license": "Licence",
+    "fps": "FPS max",
+    "copy": "Copier",
+    "copied": "Copié !"
+  },
+  "series": {
+    "Q": "vWS (Q) — Station de travail",
+    "B": "vPC (B) — Travailleur de connaissance",
+    "A": "vCS (A) — Calcul",
+    "C": "Compute (C) — Sans interface"
+  },
+  "deployment": {
+    "title": "Configuration de déploiement",
+    "pcieSlotsPerHost": "Slots PCIe par hôte",
+    "gpuCountPerHost": "GPUs par hôte",
+    "hostCount": "Nombre d'hôtes",
+    "vmTarget": "Cible VMs (cluster)",
+    "workloadType": "Type de charge de travail",
+    "workloads": {
+      "workstation": "Station de travail professionnelle (CAO/3D)",
+      "knowledge_worker": "Travailleur de connaissance (Bureau)",
+      "compute": "IA / Calcul"
+    }
+  },
+  "density": {
+    "title": "Densité de VMs",
+    "perGpu": "VMs par GPU",
+    "perHost": "VMs par hôte",
+    "perCluster": "VMs par cluster",
+    "cardsPerHost": "Cartes par hôte",
+    "gpusPerHost": "GPUs par hôte",
+    "framebuffer": "Utilisation du framebuffer",
+    "totalVram": "VRAM totale/hôte",
+    "noProfile": "Sélectionnez un GPU et un profil pour voir les calculs de densité"
+  },
+  "recommendations": {
+    "title": "Recommandations",
+    "topProfile": "Profil optimal",
+    "score": "Score d'adéquation",
+    "reasoning": "Pourquoi ce profil",
+    "noGpu": "Sélectionnez un GPU pour obtenir des recommandations"
+  },
+  "config": {
+    "title": "Extrait de config Horizon",
+    "description": "Ajoutez ces lignes à graphic-profiles.properties sur votre serveur Horizon Connection pour enregistrer le profil vGPU.",
+    "copy": "Copier la config",
+    "noGpu": "Sélectionnez un GPU et un profil pour générer l'extrait de configuration"
+  },
+  "share": {
+    "button": "Partager",
+    "copied": "URL copiée dans le presse-papiers !"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "gb": "Go",
+    "vms": "VMs"
+  },
+  "print": {
+    "button": "Imprimer"
+  }
+}

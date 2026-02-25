@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-white dark:bg-gray-950;
+  }
+
+  * {
+    @apply box-border;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print-section {
+    page-break-inside: avoid;
+    margin-bottom: 2rem;
+  }
+
+  .print-section + .print-section {
+    border-top: 1px solid #d1d5db;
+    padding-top: 1.5rem;
+  }
+}
