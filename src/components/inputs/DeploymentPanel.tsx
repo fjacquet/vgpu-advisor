@@ -58,7 +58,6 @@ function SliderField({
 export function DeploymentPanel() {
   const { t } = useTranslation();
   const {
-    activeTab,
     selectedGpuId,
     pcieSlotsPerHost,
     setPcieSlotsPerHost,
@@ -72,7 +71,7 @@ export function DeploymentPanel() {
     setWorkloadType,
   } = useConfigStore();
 
-  const isCapacityTab = activeTab === 'capacity';
+  const hasGpu = !!selectedGpuId;
 
   const gpus = gpuData as GpuCard[];
   const selectedGpu = gpus.find((g) => g.id === selectedGpuId);
@@ -110,7 +109,7 @@ export function DeploymentPanel() {
     >
       <div className="space-y-4">
         {/* Workload Type — only relevant for Recommendations tab */}
-        {!isCapacityTab && (
+        {hasGpu && (
           <div className="space-y-1.5">
             <p className="text-sm text-gray-700 dark:text-gray-300">
               {t('deployment.workloadType')}
@@ -150,7 +149,7 @@ export function DeploymentPanel() {
           />
 
           {/* GPU count + host count — only relevant for Density tab */}
-          {!isCapacityTab && (
+          {hasGpu && (
             <>
               <SliderField
                 label={t('deployment.gpuCountPerHost')}
@@ -177,7 +176,7 @@ export function DeploymentPanel() {
           )}
 
           {/* VM Target — only used by Capacity Plan tab */}
-          {isCapacityTab && (
+          {!hasGpu && (
             <SliderField
               label={t('deployment.vmTarget')}
               value={vmTarget}

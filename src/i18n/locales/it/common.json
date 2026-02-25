@@ -97,8 +97,10 @@
     "utilization": "Utilizzo",
     "optimal": "Più efficiente",
     "noGpu": "Seleziona una GPU per vedere il piano di capacità",
+    "filter": "Configurazione profilo",
     "selectSeries": "Serie profilo",
     "selectVram": "Dimensione VRAM",
+    "vramTooltip": "Più VRAM = meno VM per GPU ma esperienza grafica più ricca. Scegli il minimo che soddisfa le esigenze degli utenti.",
     "gpuModel": "GPU",
     "architecture": "Architettura",
     "noCompatibleGpu": "Nessuna GPU nel catalogo supporta un profilo {{series}} da {{vram}} GB"

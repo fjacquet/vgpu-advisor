@@ -1,37 +1,11 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import gpuData from '../../data/gpus.json';
 import { reverseCapacityPlanAllGpus } from '../../engines/densityEngine';
 import { useConfigStore } from '../../store/configStore';
-import type { GpuCard, ProfileSeries } from '../../types/gpu';
+import type { GpuCard } from '../../types/gpu';
 import type { ReverseAllGpusResult } from '../../types/results';
 
 const ALL_GPUS = gpuData as GpuCard[];
-
-const SERIES_KEYS: Record<ProfileSeries, keyof GpuCard> = {
-  Q: 'q_profile_sizes_gb',
-  B: 'b_profile_sizes_gb',
-  A: 'a_profile_sizes_gb',
-  C: 'c_profile_sizes_gb',
-};
-
-const SERIES_COLORS: Record<ProfileSeries, string> = {
-  Q: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-  B: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
-  A: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
-  C: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300',
-};
-
-function availableVramSizes(series: ProfileSeries): number[] {
-  const key = SERIES_KEYS[series];
-  const all = new Set<number>();
-  for (const gpu of ALL_GPUS) {
-    for (const v of gpu[key] as number[]) {
-      all.add(v);
-    }
-  }
-  return Array.from(all).sort((a, b) => a - b);
-}
 
 function UtilizationBar({ value }: { value: number }) {
   const pct = Math.round(value * 100);
@@ -53,25 +27,15 @@ function UtilizationBar({ value }: { value: number }) {
 
 export function CapacityPlanTable() {
   const { t } = useTranslation();
-  const { vmTarget, pcieSlotsPerHost } = useConfigStore();
-
-  const [series, setSeries] = useState<ProfileSeries>('Q');
-  const vramOptions = availableVramSizes(series);
-  const [vramGb, setVramGb] = useState<number>(vramOptions[0] ?? 4);
-
-  // When series changes, reset vram to first available for that series
-  const handleSeriesChange = (s: ProfileSeries) => {
-    setSeries(s);
-    const opts = availableVramSizes(s);
-    setVramGb(opts[0] ?? 4);
-  };
+  const { vmTarget, pcieSlotsPerHost, capacitySeries, capacityVramGb } =
+    useConfigStore();
 
   const results: ReverseAllGpusResult[] = reverseCapacityPlanAllGpus(
     ALL_GPUS,
     vmTarget,
     pcieSlotsPerHost,
-    series,
-    vramGb
+    capacitySeries,
+    capacityVramGb
   );
 
   const minHosts = results.length > 0 ? results[0].hostsNeeded : 0;
@@ -82,64 +46,12 @@ export function CapacityPlanTable() {
         {t('capacity.description')}
       </p>
 
-      {/* Inputs */}
-      <div className="flex flex-wrap gap-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-        {/* Series selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-            {t('capacity.selectSeries')}:
-          </span>
-          <div className="flex gap-1">
-            {(['Q', 'B', 'A', 'C'] as ProfileSeries[]).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => handleSeriesChange(s)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded transition-colors ${
-                  series === s
-                    ? SERIES_COLORS[s]
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-px bg-gray-300 dark:bg-gray-600 self-stretch" />
-
-        {/* VRAM selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-            {t('capacity.selectVram')}:
-          </span>
-          <div className="flex flex-wrap gap-1">
-            {vramOptions.map((v) => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => setVramGb(v)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  vramGb === v
-                    ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 font-semibold'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                {v} GB
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Results */}
       {results.length === 0 ? (
         <div className="flex items-center justify-center h-32 text-sm text-gray-400 dark:text-gray-500">
           {t('capacity.noCompatibleGpu', {
-            vram: vramGb,
-            series,
-            defaultValue: `No GPU supports a ${vramGb}GB ${series} profile`,
+            vram: capacityVramGb,
+            series: capacitySeries,
+            defaultValue: `No GPU supports a ${capacityVramGb}GB ${capacitySeries} profile`,
           })}
         </div>
       ) : (

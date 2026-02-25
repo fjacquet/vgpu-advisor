@@ -29,10 +29,16 @@ interface ConfigState {
   workloadType: WorkloadType;
   setWorkloadType: (type: WorkloadType) => void;
 
+  // Capacity Plan profile selection (no-GPU mode)
+  capacitySeries: ProfileSeries;
+  setCapacitySeries: (series: ProfileSeries) => void;
+  capacityVramGb: number;
+  setCapacityVramGb: (gb: number) => void;
+
   // UI state
-  activeTab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity';
+  activeTab: 'profiles' | 'density' | 'recommendations' | 'config';
   setActiveTab: (
-    tab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity'
+    tab: 'profiles' | 'density' | 'recommendations' | 'config'
   ) => void;
 }
 
@@ -48,6 +54,8 @@ function getInitialState() {
     hostCount: fromUrl?.hostCount ?? 10,
     vmTarget: fromUrl?.vmTarget ?? 100,
     workloadType: (fromUrl?.workloadType as WorkloadType) ?? 'workstation',
+    capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
+    capacityVramGb: fromUrl?.capacityVramGb ?? 4,
   };
 }
 
@@ -71,6 +79,9 @@ export const useConfigStore = create<ConfigState>()(
     setVmTarget: (count) => set({ vmTarget: count }),
     setWorkloadType: (type) => set({ workloadType: type }),
 
+    setCapacitySeries: (series) => set({ capacitySeries: series }),
+    setCapacityVramGb: (gb) => set({ capacityVramGb: gb }),
+
     setActiveTab: (tab) => set({ activeTab: tab }),
   }))
 );
@@ -85,6 +96,8 @@ useConfigStore.subscribe(
     hostCount: state.hostCount,
     vmTarget: state.vmTarget,
     workloadType: state.workloadType,
+    capacitySeries: state.capacitySeries,
+    capacityVramGb: state.capacityVramGb,
   }),
   (state) => {
     saveToUrl(state);

@@ -97,8 +97,10 @@
     "utilization": "Auslastung",
     "optimal": "Am effizientesten",
     "noGpu": "GPU auswählen, um den Kapazitätsplan zu sehen",
+    "filter": "Profilkonfiguration",
     "selectSeries": "Profilserie",
     "selectVram": "VRAM-Größe",
+    "vramTooltip": "Mehr VRAM = weniger VMs pro GPU, aber reichhaltigeres Grafik-Erlebnis. Wählen Sie das Minimum, das Ihren Benutzeranforderungen entspricht.",
     "gpuModel": "GPU",
     "architecture": "Architektur",
     "noCompatibleGpu": "Kein GPU im Katalog unterstützt ein {{vram}}-GB-{{series}}-Profil"
