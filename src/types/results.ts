@@ -1,4 +1,4 @@
-import type { VgpuProfile, WorkloadType } from './gpu';
+import type { GpuCard, VgpuProfile, WorkloadType } from './gpu';
 
 export interface DensityInput {
   profile: VgpuProfile;
@@ -37,4 +37,14 @@ export interface ReversePlanResult {
   cardsNeeded: number;
   instancesPerHost: number;
   gpuUtilization: number; // fraction 0..1: vmTarget / (hostsNeeded × instancesPerHost)
+}
+
+export interface ReverseAllGpusResult {
+  gpu: GpuCard;
+  profile: VgpuProfile;
+  hostsNeeded: number;
+  gpusNeeded: number;
+  cardsNeeded: number;
+  instancesPerHost: number;
+  gpuUtilization: number; // fraction 0..1
 }

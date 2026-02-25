@@ -96,7 +96,12 @@
     "vmsPerHost": "VM / host",
     "utilization": "Utilizzo",
     "optimal": "Più efficiente",
-    "noGpu": "Seleziona una GPU per vedere il piano di capacità"
+    "noGpu": "Seleziona una GPU per vedere il piano di capacità",
+    "selectSeries": "Serie profilo",
+    "selectVram": "Dimensione VRAM",
+    "gpuModel": "GPU",
+    "architecture": "Architettura",
+    "noCompatibleGpu": "Nessuna GPU nel catalogo supporta un profilo {{series}} da {{vram}} GB"
   },
   "share": {
     "button": "Condividi",

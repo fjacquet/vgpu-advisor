@@ -12,6 +12,8 @@ ADRs follow the format: **Context → Decision → Consequences → Alternatives
 | [ADR-004](ADR-004-biome-linting-formatting.md) | Biome for Linting and Formatting | Accepted |
 | [ADR-005](ADR-005-static-gpu-catalog-json.md) | Static GPU Catalog in JSON | Accepted |
 | [ADR-006](ADR-006-i18n-react-i18next.md) | Internationalisation with i18next | Accepted |
+| [ADR-007](ADR-007-citrix-xenserver-config-toggle.md) | Citrix / XenServer Config Toggle | Accepted |
+| [ADR-008](ADR-008-reverse-capacity-planning.md) | Reverse Capacity Planning Tab | Accepted |
 
 ## ADR Statuses
 

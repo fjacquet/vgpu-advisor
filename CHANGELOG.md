@@ -9,6 +9,31 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+#### Citrix / XenServer Config Toggle (ADR-007)
+- `HorizonConfigSnippet` now has a **Horizon | Citrix / XenServer** platform toggle
+- Citrix mode generates `xe vgpu-create` CLI commands per profile with XenServer GRID type names
+  (e.g. `GRID L40S-4Q`) derived from GPU model and profile data
+- Includes note that on vSphere + Citrix CVAD, profile assignment is done in vCenter (no xe commands)
+- i18n keys added: `config.platformHorizon`, `config.platformCitrix`, `config.citrixDescription`
+
+#### Reverse Capacity Planning — "Capacity Plan" tab (ADR-008)
+- New 5th output tab: **Capacity Plan** — self-contained, no GPU pre-selection required
+- User inputs: target VM count (existing sidebar slider) + desired series (Q/B/A/C) + VRAM size
+- `reverseCapacityPlanAllGpus(allGpus, vmTarget, pcieSlotsPerHost, series, vramGb)` queries all
+  18 GPUs in the catalog and returns only those supporting the requested profile
+- Output table: GPU model, architecture, VMs/Host, Hosts Needed, GPUs Needed, Cards Needed, Utilization
+- Sorted by hostsNeeded ASC (fewest hosts first); ★ marks most efficient GPU(s)
+- Colour-coded utilisation bar: green ≥80%, yellow 50–79%, red <50%
+- Dynamic VRAM selector: only shows sizes available in the catalog for the selected series
+- Reuses existing `vmTarget` and `pcieSlotsPerHost` store fields (already URL-persisted) — zero new state
+- i18n keys added: `nav.capacity`, `capacity.*` in EN/FR/DE/IT
+
+#### Developer Experience
+- `Makefile` with targets: `dev`, `build`, `preview`, `typecheck`, `lint`, `format`, `test`,
+  `check` (pre-release gate), `clean`, `release VERSION=x.y.z`, `help`
+
 ---
 
 ## [0.1.0] — 2026-02-25

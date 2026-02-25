@@ -96,7 +96,12 @@
     "vmsPerHost": "VMs / Host",
     "utilization": "Utilization",
     "optimal": "Most efficient",
-    "noGpu": "Select a GPU to see the capacity plan"
+    "noGpu": "Select a GPU to see the capacity plan",
+    "selectSeries": "Profile series",
+    "selectVram": "VRAM size",
+    "gpuModel": "GPU",
+    "architecture": "Architecture",
+    "noCompatibleGpu": "No GPU in the catalog supports a {{vram}}GB {{series}} profile"
   },
   "share": {
     "button": "Share",
