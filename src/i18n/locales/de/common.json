@@ -8,7 +8,8 @@
     "profiles": "Profile",
     "density": "Dichte",
     "recommendations": "Empfehlungen",
-    "config": "Konfig-Snippet"
+    "config": "Konfig-Snippet",
+    "capacity": "Kapazitätsplan"
   },
   "gpu": {
     "selector": "GPU auswählen",
@@ -78,10 +79,29 @@
     "noGpu": "GPU auswählen, um Empfehlungen zu erhalten"
   },
   "config": {
-    "title": "Horizon-Konfig-Snippet",
+    "title": "Konfig-Snippet",
     "description": "Fügen Sie diese Zeilen zu graphic-profiles.properties auf Ihrem Horizon Connection Server hinzu, um das vGPU-Profil zu registrieren.",
     "copy": "Konfig kopieren",
-    "noGpu": "GPU und Profil auswählen, um das Konfig-Snippet zu generieren"
+    "noGpu": "GPU und Profil auswählen, um das Konfig-Snippet zu generieren",
+    "platformHorizon": "Horizon",
+    "platformCitrix": "Citrix / XenServer",
+    "citrixDescription": "XenServer-xe-CLI-Befehle für die vGPU-Zuweisung pro VM. Profilnamen sind identisch mit Horizon."
+  },
+  "capacity": {
+    "title": "Umgekehrter Kapazitätsplan",
+    "description": "Wie viel Hardware wird benötigt, um Ihre VM-Zielanzahl zu bedienen?",
+    "hostsNeeded": "Hosts",
+    "gpusNeeded": "GPUs",
+    "cardsNeeded": "Karten",
+    "vmsPerHost": "VMs / Host",
+    "utilization": "Auslastung",
+    "optimal": "Am effizientesten",
+    "noGpu": "GPU auswählen, um den Kapazitätsplan zu sehen",
+    "selectSeries": "Profilserie",
+    "selectVram": "VRAM-Größe",
+    "gpuModel": "GPU",
+    "architecture": "Architektur",
+    "noCompatibleGpu": "Kein GPU im Katalog unterstützt ein {{vram}}-GB-{{series}}-Profil"
   },
   "share": {
     "button": "Teilen",

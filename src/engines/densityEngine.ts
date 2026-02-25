@@ -9,6 +9,8 @@ import type {
   DensityInput,
   DensityResult,
   RecommendationResult,
+  ReverseAllGpusResult,
+  ReversePlanResult,
 } from '../types/results';
 
 /**
@@ -209,4 +211,107 @@ export function getRecommendations(
 
   // Sort by score descending and return top 3
   return results.sort((a, b) => b.score - a.score).slice(0, 3);
+}
+
+/**
+ * Reverse capacity plan: given a target VM count, calculate the minimum hardware
+ * required per profile. Returns results sorted by hostsNeeded ascending (most efficient first).
+ */
+export function reverseCapacityPlan(
+  gpu: GpuCard,
+  vmTarget: number,
+  pcieSlotsPerHost: number,
+  seriesFilter?: ProfileSeries[]
+): ReversePlanResult[] {
+  const profiles = getProfilesForGpu(gpu, seriesFilter);
+  const vramPerGpu = gpu.vram_gb / gpu.gpu_count_per_card;
+  const maxCardsFromSlots = Math.floor(pcieSlotsPerHost / gpu.slot_width);
+  const maxCardsPerHost = Math.min(
+    maxCardsFromSlots,
+    Math.ceil(gpu.gpu_count_per_card / gpu.gpu_count_per_card)
+  );
+  const totalGpusPerHost = maxCardsPerHost * gpu.gpu_count_per_card;
+
+  const results: ReversePlanResult[] = profiles.map((profile) => {
+    const instancesPerGpu = Math.floor(vramPerGpu / profile.vram_gb);
+    const instancesPerHost = instancesPerGpu * totalGpusPerHost;
+    const hostsNeeded =
+      instancesPerHost > 0
+        ? Math.ceil(vmTarget / instancesPerHost)
+        : Number.POSITIVE_INFINITY;
+    const gpusNeeded = hostsNeeded * totalGpusPerHost;
+    const cardsNeeded = hostsNeeded * maxCardsPerHost;
+    const gpuUtilization =
+      hostsNeeded > 0 && instancesPerHost > 0
+        ? vmTarget / (hostsNeeded * instancesPerHost)
+        : 0;
+
+    return {
+      profile,
+      hostsNeeded: Number.isFinite(hostsNeeded) ? hostsNeeded : 0,
+      gpusNeeded,
+      cardsNeeded,
+      instancesPerHost,
+      gpuUtilization,
+    };
+  });
+
+  return results
+    .filter((r) => r.instancesPerHost > 0)
+    .sort((a, b) => a.hostsNeeded - b.hostsNeeded);
+}
+
+/**
+ * Cross-GPU reverse capacity plan: given a target VM count and a desired profile spec,
+ * returns all GPUs in the catalog that support the profile, with hardware requirements.
+ * Sorted by hostsNeeded ASC (fewest hosts = most efficient), then gpusNeeded ASC.
+ */
+export function reverseCapacityPlanAllGpus(
+  allGpus: GpuCard[],
+  vmTarget: number,
+  pcieSlotsPerHost: number,
+  targetSeries: ProfileSeries,
+  targetVramGb: number
+): ReverseAllGpusResult[] {
+  const results: ReverseAllGpusResult[] = [];
+
+  for (const gpu of allGpus) {
+    const seriesKey = `${targetSeries.toLowerCase()}_profile_sizes_gb` as
+      | 'q_profile_sizes_gb'
+      | 'b_profile_sizes_gb'
+      | 'a_profile_sizes_gb'
+      | 'c_profile_sizes_gb';
+    const sizes = gpu[seriesKey] as number[];
+    if (!sizes.includes(targetVramGb)) continue;
+
+    const vramPerGpu = gpu.vram_gb / gpu.gpu_count_per_card;
+    if (vramPerGpu < targetVramGb) continue;
+
+    const profile = deriveProfile(gpu, targetSeries, targetVramGb);
+    const maxCardsPerHost = Math.floor(pcieSlotsPerHost / gpu.slot_width);
+    const totalGpusPerHost = maxCardsPerHost * gpu.gpu_count_per_card;
+    const instancesPerGpu = Math.floor(vramPerGpu / targetVramGb);
+    const instancesPerHost = instancesPerGpu * totalGpusPerHost;
+
+    if (instancesPerHost === 0) continue;
+
+    const hostsNeeded = Math.ceil(vmTarget / instancesPerHost);
+    const gpusNeeded = hostsNeeded * totalGpusPerHost;
+    const cardsNeeded = hostsNeeded * maxCardsPerHost;
+    const gpuUtilization = vmTarget / (hostsNeeded * instancesPerHost);
+
+    results.push({
+      gpu,
+      profile,
+      hostsNeeded,
+      gpusNeeded,
+      cardsNeeded,
+      instancesPerHost,
+      gpuUtilization,
+    });
+  }
+
+  return results.sort(
+    (a, b) => a.hostsNeeded - b.hostsNeeded || a.gpusNeeded - b.gpusNeeded
+  );
 }

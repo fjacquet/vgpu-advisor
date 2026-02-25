@@ -8,7 +8,8 @@
     "profiles": "Profili",
     "density": "Densità",
     "recommendations": "Raccomandazioni",
-    "config": "Snippet config"
+    "config": "Snippet config",
+    "capacity": "Piano di capacità"
   },
   "gpu": {
     "selector": "Seleziona GPU",
@@ -78,10 +79,29 @@
     "noGpu": "Seleziona una GPU per ottenere raccomandazioni"
   },
   "config": {
-    "title": "Snippet config Horizon",
+    "title": "Snippet config",
     "description": "Aggiungi queste righe a graphic-profiles.properties sul tuo Horizon Connection Server per registrare il profilo vGPU.",
     "copy": "Copia config",
-    "noGpu": "Seleziona una GPU e un profilo per generare lo snippet di configurazione"
+    "noGpu": "Seleziona una GPU e un profilo per generare lo snippet di configurazione",
+    "platformHorizon": "Horizon",
+    "platformCitrix": "Citrix / XenServer",
+    "citrixDescription": "Comandi xe XenServer per l'assegnazione vGPU per VM. I nomi dei profili sono identici a Horizon."
+  },
+  "capacity": {
+    "title": "Piano di capacità inverso",
+    "description": "Quanta infrastruttura è necessaria per servire il numero target di VM?",
+    "hostsNeeded": "Host",
+    "gpusNeeded": "GPU",
+    "cardsNeeded": "Schede",
+    "vmsPerHost": "VM / host",
+    "utilization": "Utilizzo",
+    "optimal": "Più efficiente",
+    "noGpu": "Seleziona una GPU per vedere il piano di capacità",
+    "selectSeries": "Serie profilo",
+    "selectVram": "Dimensione VRAM",
+    "gpuModel": "GPU",
+    "architecture": "Architettura",
+    "noCompatibleGpu": "Nessuna GPU nel catalogo supporta un profilo {{series}} da {{vram}} GB"
   },
   "share": {
     "button": "Condividi",
