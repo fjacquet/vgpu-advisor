@@ -10,6 +10,12 @@ dist-ssr/
 # TypeScript cache
 *.tsbuildinfo
 
+# Test coverage
+coverage/
+
+# Serena LSP/AI tool (memories are in .serena/memories/ — commit or ignore as preferred)
+.serena/cache/
+
 # Logs
 *.log
 npm-debug.log*
