@@ -84,18 +84,6 @@ export function CapacityPlanTable() {
 
       {/* Inputs */}
       <div className="flex flex-wrap gap-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-        {/* VM target (read-only reference) */}
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-gray-500 dark:text-gray-400">
-            {t('deployment.vmTarget')}:
-          </span>
-          <span className="font-semibold text-green-700 dark:text-green-400">
-            {vmTarget.toLocaleString()} {t('common.vms')}
-          </span>
-        </div>
-
-        <div className="w-px bg-gray-300 dark:bg-gray-600 self-stretch" />
-
         {/* Series selector */}
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">

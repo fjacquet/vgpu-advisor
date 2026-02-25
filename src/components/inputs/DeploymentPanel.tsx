@@ -58,6 +58,7 @@ function SliderField({
 export function DeploymentPanel() {
   const { t } = useTranslation();
   const {
+    activeTab,
     selectedGpuId,
     pcieSlotsPerHost,
     setPcieSlotsPerHost,
@@ -70,6 +71,8 @@ export function DeploymentPanel() {
     workloadType,
     setWorkloadType,
   } = useConfigStore();
+
+  const isCapacityTab = activeTab === 'capacity';
 
   const gpus = gpuData as GpuCard[];
   const selectedGpu = gpus.find((g) => g.id === selectedGpuId);
@@ -106,34 +109,37 @@ export function DeploymentPanel() {
       }
     >
       <div className="space-y-4">
-        {/* Workload Type */}
-        <div className="space-y-1.5">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            {t('deployment.workloadType')}
-          </p>
-          <div className="flex flex-col gap-1.5">
-            {WORKLOAD_TYPES.map((wt) => (
-              <label
-                key={wt}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="workloadType"
-                  value={wt}
-                  checked={workloadType === wt}
-                  onChange={() => setWorkloadType(wt)}
-                  className="accent-green-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  {t(`deployment.workloads.${wt}`)}
-                </span>
-              </label>
-            ))}
+        {/* Workload Type — only relevant for Recommendations tab */}
+        {!isCapacityTab && (
+          <div className="space-y-1.5">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              {t('deployment.workloadType')}
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {WORKLOAD_TYPES.map((wt) => (
+                <label
+                  key={wt}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="workloadType"
+                    value={wt}
+                    checked={workloadType === wt}
+                    onChange={() => setWorkloadType(wt)}
+                    className="accent-green-500"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {t(`deployment.workloads.${wt}`)}
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-4">
+          {/* PCIe slots — used by both Density and Capacity Plan */}
           <SliderField
             label={t('deployment.pcieSlotsPerHost')}
             value={pcieSlotsPerHost}
@@ -143,37 +149,45 @@ export function DeploymentPanel() {
             tooltip="Total PCIe slots available for GPU cards in each host server"
           />
 
-          <SliderField
-            label={t('deployment.gpuCountPerHost')}
-            value={gpuCountPerHost}
-            min={1}
-            max={maxCardsFromSlots * (selectedGpu?.gpu_count_per_card ?? 1)}
-            onChange={setGpuCountPerHost}
-            tooltip={
-              selectedGpu
-                ? `${selectedGpu.slot_width === 2 ? 'Double-width' : 'Single-width'} card fits ${maxCardsFromSlots} cards (${maxCardsFromSlots * selectedGpu.gpu_count_per_card} GPUs) in ${pcieSlotsPerHost} slots`
-                : 'Number of physical GPUs per host server'
-            }
-          />
+          {/* GPU count + host count — only relevant for Density tab */}
+          {!isCapacityTab && (
+            <>
+              <SliderField
+                label={t('deployment.gpuCountPerHost')}
+                value={gpuCountPerHost}
+                min={1}
+                max={maxCardsFromSlots * (selectedGpu?.gpu_count_per_card ?? 1)}
+                onChange={setGpuCountPerHost}
+                tooltip={
+                  selectedGpu
+                    ? `${selectedGpu.slot_width === 2 ? 'Double-width' : 'Single-width'} card fits ${maxCardsFromSlots} cards (${maxCardsFromSlots * selectedGpu.gpu_count_per_card} GPUs) in ${pcieSlotsPerHost} slots`
+                    : 'Number of physical GPUs per host server'
+                }
+              />
 
-          <SliderField
-            label={t('deployment.hostCount')}
-            value={hostCount}
-            min={1}
-            max={100}
-            onChange={setHostCount}
-            tooltip="Number of ESXi host servers in the cluster"
-          />
+              <SliderField
+                label={t('deployment.hostCount')}
+                value={hostCount}
+                min={1}
+                max={100}
+                onChange={setHostCount}
+                tooltip="Number of ESXi host servers in the cluster"
+              />
+            </>
+          )}
 
-          <SliderField
-            label={t('deployment.vmTarget')}
-            value={vmTarget}
-            min={10}
-            max={5000}
-            step={10}
-            onChange={setVmTarget}
-            tooltip="Target number of VMs for the entire cluster"
-          />
+          {/* VM Target — only used by Capacity Plan tab */}
+          {isCapacityTab && (
+            <SliderField
+              label={t('deployment.vmTarget')}
+              value={vmTarget}
+              min={10}
+              max={5000}
+              step={10}
+              onChange={setVmTarget}
+              tooltip="Target number of VMs for the entire cluster"
+            />
+          )}
         </div>
       </div>
     </AccordionItem>
