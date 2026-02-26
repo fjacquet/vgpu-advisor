@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "vGPU Advisor",
-    "subtitle": "NVIDIA vGPU-Profilrechner für Omnissa Horizon",
+    "subtitle": "NVIDIA vGPU-Profilrechner für Omnissa Horizon & Citrix",
     "tagline": "Wählen Sie das richtige vGPU-Profil für Ihre VDI-Bereitstellung"
   },
   "nav": {
@@ -24,7 +24,12 @@
     "sw": "Einfachbreite",
     "dw": "Doppelbreite",
     "active": "Aktiv",
-    "passive": "Passiv"
+    "passive": "Passiv",
+    "tooltips": {
+      "slotWidth": "SW = Einfachbreite (1 PCIe-Slot). DW = Doppelbreite (2 PCIe-Slots). Bestimmt, wie viele Karten pro Host passen.",
+      "cooling": "Aktiv: Karte hat eigene Lüfter. Passiv: abhängig vom Gehäuse-Luftstrom — ausreichende Serverbelüftung sicherstellen.",
+      "tdp": "Maximale Wärmeabgabe in Watt pro Karte. Sicherstellen, dass Netzteil und Kühlung des Servers diesen Wert unterstützen."
+    }
   },
   "profiles": {
     "filter": "Profilfilter",
@@ -38,8 +43,15 @@
     "resolution": "Max. Auflösung",
     "license": "Lizenz",
     "fps": "Max. FPS",
+    "available": "{{count}} Profile verfügbar für {{gpu}}",
+    "vramUtil": "VRAM-Auslastung ({{instances}}×{{vram}}GB)",
     "copy": "Kopieren",
-    "copied": "Kopiert!"
+    "copied": "Kopiert!",
+    "tooltips": {
+      "framebufferUtil": "Prozentsatz der GPU-VRAM-Nutzung mit der aktuellen Slot-Konfiguration. Höher = effizienter. Grün = 100%, Gelb ≥80%, Blau <80%.",
+      "maxInstances": "Maximale VMs, die sich eine physische GPU bei dieser Profilgröße teilen (Hardware-Limit)",
+      "license": "Erforderliche NVIDIA vGPU Software-Lizenzstufe für dieses Profil"
+    }
   },
   "series": {
     "Q": "vWS (Q) — Workstation",
@@ -52,12 +64,31 @@
     "pcieSlotsPerHost": "PCIe-Slots pro Host",
     "gpuCountPerHost": "GPUs pro Host",
     "hostCount": "Anzahl Hosts",
-    "vmTarget": "VM-Ziel (Cluster)",
+    "vmTarget": "VM-Gesamtziel",
+    "maxVmsPerPod": "Max VMs pro Pod",
+    "podsPerSuperpod": "Pods pro Superpod",
+    "clusterType": "Cluster-Typ",
+    "clusterTypes": {
+      "vdi": "Horizon VDI / Nutanix AHV (≤32 Hosts)",
+      "vsphere8": "vSphere 8 max (≤64 Hosts)",
+      "vsphere9": "vSphere 9 max (≤128 Hosts)",
+      "ocp": "OpenShift Virtualization (≤64 Nodes)"
+    },
     "workloadType": "Workload-Typ",
     "workloads": {
       "workstation": "Professionelle Workstation (CAD/3D)",
       "knowledge_worker": "Wissensarbeiter (Büro)",
       "compute": "KI / Compute"
+    },
+    "tooltips": {
+      "pcieSlotsSwMax": "Einfachbreite Karten: max. 6 Karten × 1 Slot = 6 PCIe-Slots",
+      "pcieSlotsDwMax": "Doppelbreite Karten: max. 4 Karten × 2 Slots = 8 PCIe-Slots",
+      "gpuCountDetail": "{{cardType}}-Karte: {{maxCards}} Karten ({{totalGpus}} GPUs) in {{slots}} Slots",
+      "gpuCountSimple": "Anzahl physischer GPUs pro Host-Server",
+      "hostCount": "Anzahl Host-Server im Cluster",
+      "vmTarget": "Gesamt-VMs über alle Pods/Zonen. Jeder Pod unterstützt bis zu 20.000 Sessions (Horizon) oder 25.000 (Citrix). Max. 50.000 über 25 Horizon-CPA-Pods.",
+      "maxVmsPerPod": "Maximale VMs pro Horizon-Pod (CPA). Omnissa empfiehlt ≤2.000 Sessions pro Pod. Pods = ceil(VM-Ziel ÷ dieser Wert).",
+      "podsPerSuperpod": "Anzahl Pods in einem Superpod (Omnissa Sizing-Einheit). Superpods = ceil(Pods ÷ dieser Wert). Typisch: 4 Pods pro Superpod."
     }
   },
   "density": {
@@ -69,13 +100,33 @@
     "gpusPerHost": "GPUs pro Host",
     "framebuffer": "Framebuffer-Auslastung",
     "totalVram": "Gesamt-VRAM/Host",
-    "noProfile": "GPU und Profil auswählen, um Dichtewerte zu sehen"
+    "hostsInCluster": "Hosts im Cluster",
+    "chartTitle": "VMs pro Cluster nach Profil",
+    "max": "max",
+    "noProfile": "GPU und Profil auswählen, um Dichtewerte zu sehen",
+    "tooltips": {
+      "perGpu": "Maximale VMs, die sich eine physische GPU teilen, basierend auf der Framebuffer-Größe des Profils",
+      "perHost": "VMs pro GPU × GPUs pro Host",
+      "perCluster": "VMs pro Host × Anzahl Hosts im Cluster",
+      "framebufferUtil": "GPU-VRAM-Auslastung: Instanzen × Profil-VRAM ÷ Gesamt-VRAM pro GPU. Grün = 100% (optimal), Gelb ≥80%, Blau <80%."
+    }
   },
   "recommendations": {
     "title": "Empfehlungen",
     "topProfile": "Top-Profil",
     "score": "Eignungswert",
     "reasoning": "Warum dieses Profil",
+    "showingTop": "Top {{count}} Profile für {{workload}}-Workload auf {{gpu}}",
+    "rank1": "Beste",
+    "rank2": "Zweitplatziert",
+    "rank3": "Alternative",
+    "perGpu": "pro GPU",
+    "perHost": "pro Host",
+    "perCluster": "VMs/Cluster",
+    "vramLabel": "VRAM",
+    "tooltips": {
+      "ranking": "Profile werden nach Workload-Eignung bewertet: VRAM-Zuteilung, Display-Anzahl, FPS-Reserve und Serienanpassung. Workload-Typ in der Seitenleiste ändern, um die Reihenfolge zu ändern."
+    },
     "noGpu": "GPU auswählen, um Empfehlungen zu erhalten"
   },
   "config": {
@@ -90,15 +141,23 @@
   "capacity": {
     "title": "Umgekehrter Kapazitätsplan",
     "description": "Wie viel Hardware wird benötigt, um Ihre VM-Zielanzahl zu bedienen?",
-    "hostsNeeded": "Hosts",
+    "hostsNeeded": "Hosts / Pod",
+    "vmsPerPod": "VMs / Pod",
+    "vmsPerPodShort": "VMs/Pod",
+    "pods": "Pods",
+    "superpods": "Superpods",
+    "totalHosts": "Hosts gesamt ({{pods}} Pods)",
     "gpusNeeded": "GPUs",
     "cardsNeeded": "Karten",
     "vmsPerHost": "VMs / Host",
     "utilization": "Auslastung",
     "optimal": "Am effizientesten",
     "noGpu": "GPU auswählen, um den Kapazitätsplan zu sehen",
+    "filter": "Profilkonfiguration",
     "selectSeries": "Profilserie",
+    "selectArchitecture": "GPU-Generation",
     "selectVram": "VRAM-Größe",
+    "vramTooltip": "Mehr VRAM = weniger VMs pro GPU, aber reichhaltigeres Grafik-Erlebnis. Wählen Sie das Minimum, das Ihren Benutzeranforderungen entspricht.",
     "gpuModel": "GPU",
     "architecture": "Architektur",
     "noCompatibleGpu": "Kein GPU im Katalog unterstützt ein {{vram}}-GB-{{series}}-Profil"
@@ -114,6 +173,9 @@
     "vms": "VMs"
   },
   "print": {
-    "button": "Drucken"
+    "button": "Drucken",
+    "rank": "Rang",
+    "profile": "Profil",
+    "generated": "Erstellt"
   }
 }

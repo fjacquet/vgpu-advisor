@@ -3,6 +3,7 @@ import gpuData from '../../data/gpus.json';
 import { getRecommendations } from '../../engines/densityEngine';
 import { useConfigStore } from '../../store/configStore';
 import type { GpuCard } from '../../types/gpu';
+import { InfoTooltip } from '../common/InfoTooltip';
 import { SeriesBadge } from '../common/SeriesBadge';
 
 export function RecommendationCard() {
@@ -33,19 +34,23 @@ export function RecommendationCard() {
     'ring-1 ring-gray-300 dark:ring-gray-600',
     'ring-1 ring-gray-200 dark:ring-gray-700',
   ];
-  const RANK_LABELS = ['🥇 Best', '🥈 Runner-up', '🥉 Alternative'];
+  const RANK_LABELS = [
+    `🥇 ${t('recommendations.rank1')}`,
+    `🥈 ${t('recommendations.rank2')}`,
+    `🥉 ${t('recommendations.rank3')}`,
+  ];
 
   return (
     <div className="space-y-4">
-      <div className="text-sm text-gray-500 dark:text-gray-400">
-        Showing top {recommendations.length} profiles for{' '}
-        <span className="font-medium text-gray-900 dark:text-gray-100">
-          {t(`deployment.workloads.${workloadType}`)}
-        </span>{' '}
-        workload on{' '}
-        <span className="font-medium text-gray-900 dark:text-gray-100">
-          {selectedGpu.model}
+      <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+        <span>
+          {t('recommendations.showingTop', {
+            count: recommendations.length,
+            workload: t(`deployment.workloads.${workloadType}`),
+            gpu: selectedGpu.model,
+          })}
         </span>
+        <InfoTooltip content={t('recommendations.tooltips.ranking')} />
       </div>
 
       {recommendations.map((rec, index) => (
@@ -71,7 +76,7 @@ export function RecommendationCard() {
                 {rec.densityResult.instancesPerCluster}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                VMs/cluster
+                {t('recommendations.perCluster')}
               </div>
             </div>
           </div>
@@ -83,7 +88,7 @@ export function RecommendationCard() {
                 {rec.densityResult.instancesPerGpu}
               </div>
               <div className="text-xs text-gray-400 dark:text-gray-500">
-                per GPU
+                {t('recommendations.perGpu')}
               </div>
             </div>
             <div className="text-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
@@ -91,7 +96,7 @@ export function RecommendationCard() {
                 {rec.densityResult.instancesPerHost}
               </div>
               <div className="text-xs text-gray-400 dark:text-gray-500">
-                per host
+                {t('recommendations.perHost')}
               </div>
             </div>
             <div className="text-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
@@ -99,7 +104,7 @@ export function RecommendationCard() {
                 {rec.profile.vram_gb}GB
               </div>
               <div className="text-xs text-gray-400 dark:text-gray-500">
-                VRAM
+                {t('recommendations.vramLabel')}
               </div>
             </div>
           </div>

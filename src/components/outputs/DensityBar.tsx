@@ -15,6 +15,7 @@ import {
 } from '../../engines/densityEngine';
 import { useConfigStore } from '../../store/configStore';
 import type { GpuCard } from '../../types/gpu';
+import { InfoTooltip } from '../common/InfoTooltip';
 
 export function DensityBar() {
   const { t } = useTranslation();
@@ -78,18 +79,21 @@ export function DensityBar() {
               label: t('density.perGpu'),
               key: 'perGpu',
               color: 'text-blue-600 dark:text-blue-400',
+              tooltip: t('density.tooltips.perGpu'),
             },
             {
               label: t('density.perHost'),
               key: 'perHost',
               color: 'text-purple-600 dark:text-purple-400',
+              tooltip: t('density.tooltips.perHost'),
             },
             {
               label: t('density.perCluster'),
               key: 'perCluster',
               color: 'text-green-600 dark:text-green-400',
+              tooltip: t('density.tooltips.perCluster'),
             },
-          ].map(({ label, key, color }) => {
+          ].map(({ label, key, color, tooltip }) => {
             const maxVal = Math.max(
               ...chartData.map((d) => d[key as keyof typeof d] as number)
             );
@@ -99,11 +103,12 @@ export function DensityBar() {
                 className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
               >
                 <div className={`text-2xl font-bold ${color}`}>{maxVal}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {label}
+                <div className="flex items-center justify-center gap-1 text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  <span>{label}</span>
+                  <InfoTooltip content={tooltip} />
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-500">
-                  (max)
+                  ({t('density.max')})
                 </div>
               </div>
             );
@@ -114,7 +119,7 @@ export function DensityBar() {
       {/* VM density bar chart */}
       <div>
         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          VMs per cluster by profile
+          {t('density.chartTitle')}
         </h4>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart
@@ -133,7 +138,11 @@ export function DensityBar() {
               }}
               formatter={(value: number, name: string) => [value, name]}
             />
-            <Bar dataKey="perCluster" name="VMs/cluster" radius={[3, 3, 0, 0]}>
+            <Bar
+              dataKey="perCluster"
+              name={t('density.perCluster')}
+              radius={[3, 3, 0, 0]}
+            >
               {chartData.map((entry) => (
                 <Cell
                   key={entry.name}
@@ -177,7 +186,7 @@ export function DensityBar() {
         </div>
         <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-3">
           <div className="text-gray-500 dark:text-gray-400 text-xs">
-            Hosts in cluster
+            {t('density.hostsInCluster')}
           </div>
           <div className="font-semibold text-gray-900 dark:text-gray-100">
             {hostCount}

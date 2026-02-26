@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "vGPU Advisor",
-    "subtitle": "Calculateur de profils vGPU NVIDIA pour Omnissa Horizon",
+    "subtitle": "Calculateur de profils vGPU NVIDIA pour Omnissa Horizon & Citrix",
     "tagline": "Choisissez le bon profil vGPU pour votre déploiement VDI"
   },
   "nav": {
@@ -24,7 +24,12 @@
     "sw": "Simple largeur",
     "dw": "Double largeur",
     "active": "Actif",
-    "passive": "Passif"
+    "passive": "Passif",
+    "tooltips": {
+      "slotWidth": "SW = Simple largeur (1 slot PCIe). DW = Double largeur (2 slots PCIe). Détermine le nombre de cartes par hôte.",
+      "cooling": "Actif : la carte a ses propres ventilateurs. Passif : dépend du flux d'air du châssis — vérifier que la ventilation du serveur est suffisante.",
+      "tdp": "Dissipation thermique maximale en watts par carte. Vérifier que l'alimentation et le refroidissement du serveur peuvent le prendre en charge."
+    }
   },
   "profiles": {
     "filter": "Filtre de profils",
@@ -38,8 +43,15 @@
     "resolution": "Résolution max",
     "license": "Licence",
     "fps": "FPS max",
+    "available": "{{count}} profils disponibles pour {{gpu}}",
+    "vramUtil": "Utilisation VRAM ({{instances}}×{{vram}}Go)",
     "copy": "Copier",
-    "copied": "Copié !"
+    "copied": "Copié !",
+    "tooltips": {
+      "framebufferUtil": "Pourcentage de VRAM GPU utilisée avec la config de slots actuelle. Plus c'est élevé, plus c'est efficace. Vert = 100%, Jaune ≥80%, Bleu <80%.",
+      "maxInstances": "Maximum de VMs partageant un GPU physique à cette taille de profil (limite matérielle)",
+      "license": "Niveau de licence logicielle NVIDIA vGPU requis pour ce profil"
+    }
   },
   "series": {
     "Q": "vWS (Q) — Station de travail",
@@ -52,12 +64,31 @@
     "pcieSlotsPerHost": "Slots PCIe par hôte",
     "gpuCountPerHost": "GPUs par hôte",
     "hostCount": "Nombre d'hôtes",
-    "vmTarget": "Cible VMs (cluster)",
+    "vmTarget": "Cible VMs totale",
+    "maxVmsPerPod": "VMs max par pod",
+    "podsPerSuperpod": "Pods par superpod",
+    "clusterType": "Type de cluster",
+    "clusterTypes": {
+      "vdi": "Horizon VDI / Nutanix AHV (≤32 hôtes)",
+      "vsphere8": "vSphere 8 max (≤64 hôtes)",
+      "vsphere9": "vSphere 9 max (≤128 hôtes)",
+      "ocp": "OpenShift Virtualization (≤64 nœuds)"
+    },
     "workloadType": "Type de charge de travail",
     "workloads": {
       "workstation": "Station de travail professionnelle (CAO/3D)",
       "knowledge_worker": "Travailleur de connaissance (Bureau)",
       "compute": "IA / Calcul"
+    },
+    "tooltips": {
+      "pcieSlotsSwMax": "Cartes simple largeur : max 6 cartes × 1 slot = 6 slots PCIe",
+      "pcieSlotsDwMax": "Cartes double largeur : max 4 cartes × 2 slots = 8 slots PCIe",
+      "gpuCountDetail": "Carte {{cardType}} : {{maxCards}} cartes ({{totalGpus}} GPU) dans {{slots}} slots",
+      "gpuCountSimple": "Nombre de GPU physiques par serveur hôte",
+      "hostCount": "Nombre de serveurs hôtes dans le cluster",
+      "vmTarget": "VMs totales sur tous les pods/zones. Chaque pod supporte jusqu'à 20 000 sessions (Horizon) ou 25 000 (Citrix). Max 50 000 sur 25 pods CPA Horizon.",
+      "maxVmsPerPod": "VMs maximum par pod Horizon (CPA). Omnissa recommande ≤2 000 sessions par pod. Pods = ceil(cible VMs ÷ cette valeur).",
+      "podsPerSuperpod": "Nombre de pods regroupés dans un superpod (unité de dimensionnement Omnissa). Superpods = ceil(pods ÷ cette valeur). Typique : 4 pods par superpod."
     }
   },
   "density": {
@@ -69,13 +100,33 @@
     "gpusPerHost": "GPUs par hôte",
     "framebuffer": "Utilisation du framebuffer",
     "totalVram": "VRAM totale/hôte",
-    "noProfile": "Sélectionnez un GPU et un profil pour voir les calculs de densité"
+    "hostsInCluster": "Hôtes dans le cluster",
+    "chartTitle": "VMs par cluster par profil",
+    "max": "max",
+    "noProfile": "Sélectionnez un GPU et un profil pour voir les calculs de densité",
+    "tooltips": {
+      "perGpu": "Maximum de VMs partageant un GPU physique selon la taille du framebuffer du profil",
+      "perHost": "VMs par GPU × GPU par hôte",
+      "perCluster": "VMs par hôte × nombre d'hôtes dans le cluster",
+      "framebufferUtil": "VRAM GPU utilisée : instances × VRAM profil ÷ VRAM totale par GPU. Vert = 100% (optimal), Jaune ≥80%, Bleu <80%."
+    }
   },
   "recommendations": {
     "title": "Recommandations",
     "topProfile": "Profil optimal",
     "score": "Score d'adéquation",
     "reasoning": "Pourquoi ce profil",
+    "showingTop": "{{count}} meilleurs profils pour la charge {{workload}} sur {{gpu}}",
+    "rank1": "Meilleur",
+    "rank2": "Finaliste",
+    "rank3": "Alternative",
+    "perGpu": "par GPU",
+    "perHost": "par hôte",
+    "perCluster": "VMs/cluster",
+    "vramLabel": "VRAM",
+    "tooltips": {
+      "ranking": "Les profils sont classés par adéquation : allocation VRAM, nombre d'écrans, marge FPS et correspondance de série. Ajustez le type de charge dans la barre latérale pour modifier le classement."
+    },
     "noGpu": "Sélectionnez un GPU pour obtenir des recommandations"
   },
   "config": {
@@ -90,15 +141,23 @@
   "capacity": {
     "title": "Plan de capacité inverse",
     "description": "Quelle infrastructure est nécessaire pour servir votre nombre cible de VMs ?",
-    "hostsNeeded": "Hôtes",
+    "hostsNeeded": "Hôtes / pod",
+    "vmsPerPod": "VMs / pod",
+    "vmsPerPodShort": "VMs/pod",
+    "pods": "pods",
+    "superpods": "superpods",
+    "totalHosts": "Total hôtes ({{pods}} pods)",
     "gpusNeeded": "GPUs",
     "cardsNeeded": "Cartes",
     "vmsPerHost": "VMs / hôte",
     "utilization": "Utilisation",
     "optimal": "Plus efficace",
     "noGpu": "Sélectionnez un GPU pour voir le plan de capacité",
+    "filter": "Paramètres de profil",
     "selectSeries": "Série de profil",
+    "selectArchitecture": "Génération GPU",
     "selectVram": "Taille VRAM",
+    "vramTooltip": "Plus de VRAM = moins de VMs par GPU mais une expérience graphique plus riche. Choisissez le minimum adapté à vos utilisateurs.",
     "gpuModel": "GPU",
     "architecture": "Architecture",
     "noCompatibleGpu": "Aucun GPU du catalogue ne supporte un profil {{series}} de {{vram}} Go"
@@ -114,6 +173,9 @@
     "vms": "VMs"
   },
   "print": {
-    "button": "Imprimer"
+    "button": "Imprimer",
+    "rank": "Rang",
+    "profile": "Profil",
+    "generated": "Généré"
   }
 }

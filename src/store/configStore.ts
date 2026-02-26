@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { ProfileSeries, WorkloadType } from '../types/gpu';
+import type { Architecture, ProfileSeries, WorkloadType } from '../types/gpu';
+import { ARCHITECTURE_ORDER } from '../types/gpu';
 import { loadFromUrl, saveToUrl } from './urlStorage';
 
 interface ConfigState {
@@ -29,10 +30,25 @@ interface ConfigState {
   workloadType: WorkloadType;
   setWorkloadType: (type: WorkloadType) => void;
 
+  clusterType: 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp';
+  setClusterType: (type: 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp') => void;
+
+  // Capacity Plan profile selection (no-GPU mode)
+  capacitySeries: ProfileSeries;
+  setCapacitySeries: (series: ProfileSeries) => void;
+  capacityVramGb: number;
+  setCapacityVramGb: (gb: number) => void;
+  capacityArchitectures: Architecture[];
+  setCapacityArchitectures: (archs: Architecture[]) => void;
+  maxVmsPerPod: number;
+  setMaxVmsPerPod: (count: number) => void;
+  podsPerSuperpod: number;
+  setPodsPerSuperpod: (count: number) => void;
+
   // UI state
-  activeTab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity';
+  activeTab: 'profiles' | 'density' | 'recommendations' | 'config';
   setActiveTab: (
-    tab: 'profiles' | 'density' | 'recommendations' | 'config' | 'capacity'
+    tab: 'profiles' | 'density' | 'recommendations' | 'config'
   ) => void;
 }
 
@@ -48,6 +64,15 @@ function getInitialState() {
     hostCount: fromUrl?.hostCount ?? 10,
     vmTarget: fromUrl?.vmTarget ?? 100,
     workloadType: (fromUrl?.workloadType as WorkloadType) ?? 'workstation',
+    capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
+    capacityVramGb: fromUrl?.capacityVramGb ?? 4,
+    capacityArchitectures:
+      (fromUrl?.capacityArchitectures as Architecture[]) ?? ARCHITECTURE_ORDER,
+    maxVmsPerPod: fromUrl?.maxVmsPerPod ?? 2000,
+    podsPerSuperpod: fromUrl?.podsPerSuperpod ?? 4,
+    clusterType:
+      (fromUrl?.clusterType as 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp') ??
+      'vdi',
   };
 }
 
@@ -71,6 +96,14 @@ export const useConfigStore = create<ConfigState>()(
     setVmTarget: (count) => set({ vmTarget: count }),
     setWorkloadType: (type) => set({ workloadType: type }),
 
+    setCapacitySeries: (series) => set({ capacitySeries: series }),
+    setCapacityVramGb: (gb) => set({ capacityVramGb: gb }),
+    setCapacityArchitectures: (archs) => set({ capacityArchitectures: archs }),
+    setMaxVmsPerPod: (count) => set({ maxVmsPerPod: count }),
+    setPodsPerSuperpod: (count) => set({ podsPerSuperpod: count }),
+
+    setClusterType: (type) => set({ clusterType: type }),
+
     setActiveTab: (tab) => set({ activeTab: tab }),
   }))
 );
@@ -85,6 +118,12 @@ useConfigStore.subscribe(
     hostCount: state.hostCount,
     vmTarget: state.vmTarget,
     workloadType: state.workloadType,
+    capacitySeries: state.capacitySeries,
+    capacityVramGb: state.capacityVramGb,
+    capacityArchitectures: state.capacityArchitectures,
+    maxVmsPerPod: state.maxVmsPerPod,
+    podsPerSuperpod: state.podsPerSuperpod,
+    clusterType: state.clusterType,
   }),
   (state) => {
     saveToUrl(state);

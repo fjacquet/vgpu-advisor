@@ -5,6 +5,13 @@ import type { GpuCard, WorkloadType } from '../../types/gpu';
 import { AccordionItem } from '../common/AccordionItem';
 import { InfoTooltip } from '../common/InfoTooltip';
 
+const CLUSTER_HOST_MAX: Record<string, number> = {
+  vdi: 32,
+  vsphere8: 64,
+  vsphere9: 128,
+  ocp: 64,
+};
+
 interface SliderFieldProps {
   label: string;
   value: number;
@@ -14,6 +21,56 @@ interface SliderFieldProps {
   onChange: (v: number) => void;
   tooltip?: string;
   unit?: string;
+}
+
+interface NumberInputFieldProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  onChange: (v: number) => void;
+  tooltip?: string;
+  unit?: string;
+}
+
+function NumberInputField({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  tooltip,
+  unit,
+}: NumberInputFieldProps) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
+        <span>{label}</span>
+        {tooltip && <InfoTooltip content={tooltip} />}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => {
+            const v = Number.parseInt(e.target.value, 10);
+            if (!Number.isNaN(v)) onChange(Math.max(min, Math.min(max, v)));
+          }}
+          className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 tabular-nums"
+        />
+        {unit && (
+          <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            {unit}
+          </span>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function SliderField({
@@ -69,21 +126,41 @@ export function DeploymentPanel() {
     setVmTarget,
     workloadType,
     setWorkloadType,
+    clusterType,
+    setClusterType,
+    maxVmsPerPod,
+    setMaxVmsPerPod,
+    podsPerSuperpod,
+    setPodsPerSuperpod,
   } = useConfigStore();
+
+  const hasGpu = !!selectedGpuId;
 
   const gpus = gpuData as GpuCard[];
   const selectedGpu = gpus.find((g) => g.id === selectedGpuId);
 
-  // Calculate max cards if GPU is selected
+  // PCIe slots: DW cards take 2 slots (max 4 cards = 8 slots); SW take 1 slot (max 6 cards = 6 slots)
+  const maxPcieSlots = selectedGpu?.slot_width === 1 ? 6 : 8;
+
   const maxCardsFromSlots = selectedGpu
     ? Math.floor(pcieSlotsPerHost / selectedGpu.slot_width)
     : Math.floor(pcieSlotsPerHost / 1);
+
+  const maxHosts = CLUSTER_HOST_MAX[clusterType] ?? 32;
 
   const WORKLOAD_TYPES: WorkloadType[] = [
     'workstation',
     'knowledge_worker',
     'compute',
   ];
+
+  const CLUSTER_TYPES = ['vdi', 'vsphere8', 'vsphere9', 'ocp'] as const;
+
+  const handleClusterTypeChange = (ct: (typeof CLUSTER_TYPES)[number]) => {
+    setClusterType(ct);
+    const newMax = CLUSTER_HOST_MAX[ct];
+    if (hostCount > newMax) setHostCount(newMax);
+  };
 
   return (
     <AccordionItem
@@ -106,73 +183,145 @@ export function DeploymentPanel() {
       }
     >
       <div className="space-y-4">
-        {/* Workload Type */}
-        <div className="space-y-1.5">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            {t('deployment.workloadType')}
-          </p>
-          <div className="flex flex-col gap-1.5">
-            {WORKLOAD_TYPES.map((wt) => (
-              <label
-                key={wt}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="workloadType"
-                  value={wt}
-                  checked={workloadType === wt}
-                  onChange={() => setWorkloadType(wt)}
-                  className="accent-green-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  {t(`deployment.workloads.${wt}`)}
-                </span>
-              </label>
-            ))}
+        {/* Workload Type — GPU mode only */}
+        {hasGpu && (
+          <div className="space-y-1.5">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              {t('deployment.workloadType')}
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {WORKLOAD_TYPES.map((wt) => (
+                <label
+                  key={wt}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="workloadType"
+                    value={wt}
+                    checked={workloadType === wt}
+                    onChange={() => setWorkloadType(wt)}
+                    className="accent-green-500"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {t(`deployment.workloads.${wt}`)}
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-4">
+          {/* PCIe slots */}
           <SliderField
             label={t('deployment.pcieSlotsPerHost')}
-            value={pcieSlotsPerHost}
+            value={Math.min(pcieSlotsPerHost, maxPcieSlots)}
             min={1}
-            max={16}
+            max={maxPcieSlots}
             onChange={setPcieSlotsPerHost}
-            tooltip="Total PCIe slots available for GPU cards in each host server"
-          />
-
-          <SliderField
-            label={t('deployment.gpuCountPerHost')}
-            value={gpuCountPerHost}
-            min={1}
-            max={maxCardsFromSlots * (selectedGpu?.gpu_count_per_card ?? 1)}
-            onChange={setGpuCountPerHost}
             tooltip={
-              selectedGpu
-                ? `${selectedGpu.slot_width === 2 ? 'Double-width' : 'Single-width'} card fits ${maxCardsFromSlots} cards (${maxCardsFromSlots * selectedGpu.gpu_count_per_card} GPUs) in ${pcieSlotsPerHost} slots`
-                : 'Number of physical GPUs per host server'
+              selectedGpu?.slot_width === 1
+                ? t('deployment.tooltips.pcieSlotsSwMax')
+                : t('deployment.tooltips.pcieSlotsDwMax')
             }
           />
 
-          <SliderField
-            label={t('deployment.hostCount')}
-            value={hostCount}
-            min={1}
-            max={100}
-            onChange={setHostCount}
-            tooltip="Number of ESXi host servers in the cluster"
-          />
+          {/* GPU count + cluster config — GPU mode only */}
+          {hasGpu && (
+            <>
+              <SliderField
+                label={t('deployment.gpuCountPerHost')}
+                value={gpuCountPerHost}
+                min={1}
+                max={maxCardsFromSlots * (selectedGpu?.gpu_count_per_card ?? 1)}
+                onChange={setGpuCountPerHost}
+                tooltip={
+                  selectedGpu
+                    ? t('deployment.tooltips.gpuCountDetail', {
+                        cardType:
+                          selectedGpu.slot_width === 2
+                            ? t('gpu.dw')
+                            : t('gpu.sw'),
+                        maxCards: maxCardsFromSlots,
+                        totalGpus:
+                          maxCardsFromSlots * selectedGpu.gpu_count_per_card,
+                        slots: pcieSlotsPerHost,
+                      })
+                    : t('deployment.tooltips.gpuCountSimple')
+                }
+              />
 
+              {/* Cluster type selector */}
+              <div className="space-y-1.5">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('deployment.clusterType')}
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {CLUSTER_TYPES.map((ct) => (
+                    <label
+                      key={ct}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="clusterType"
+                        value={ct}
+                        checked={clusterType === ct}
+                        onChange={() => handleClusterTypeChange(ct)}
+                        className="accent-green-500"
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {t(`deployment.clusterTypes.${ct}`)}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <SliderField
+                label={t('deployment.hostCount')}
+                value={Math.min(hostCount, maxHosts)}
+                min={1}
+                max={maxHosts}
+                onChange={setHostCount}
+                tooltip={t('deployment.tooltips.hostCount')}
+              />
+            </>
+          )}
+
+          {/* VM Target — capacity plan mode only */}
+          {!hasGpu && (
+            <NumberInputField
+              label={t('deployment.vmTarget')}
+              value={vmTarget}
+              min={10}
+              max={50000}
+              step={10}
+              onChange={setVmTarget}
+              tooltip={t('deployment.tooltips.vmTarget')}
+              unit={t('common.vms')}
+            />
+          )}
+
+          {/* Pod / Superpod config — always visible */}
           <SliderField
-            label={t('deployment.vmTarget')}
-            value={vmTarget}
-            min={10}
-            max={5000}
-            step={10}
-            onChange={setVmTarget}
-            tooltip="Target number of VMs for the entire cluster"
+            label={t('deployment.maxVmsPerPod')}
+            value={maxVmsPerPod}
+            min={100}
+            max={10000}
+            step={100}
+            onChange={setMaxVmsPerPod}
+            tooltip={t('deployment.tooltips.maxVmsPerPod')}
+          />
+          <SliderField
+            label={t('deployment.podsPerSuperpod')}
+            value={podsPerSuperpod}
+            min={1}
+            max={10}
+            step={1}
+            onChange={setPodsPerSuperpod}
+            tooltip={t('deployment.tooltips.podsPerSuperpod')}
           />
         </div>
       </div>

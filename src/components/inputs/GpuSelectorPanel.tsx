@@ -4,6 +4,7 @@ import { useConfigStore } from '../../store/configStore';
 import type { Architecture, GpuCard } from '../../types/gpu';
 import { ARCHITECTURE_ORDER } from '../../types/gpu';
 import { AccordionItem } from '../common/AccordionItem';
+import { InfoTooltip } from '../common/InfoTooltip';
 
 const ARCH_LABELS: Record<Architecture, string> = {
   blackwell: 'Blackwell (2024+)',
@@ -111,23 +112,28 @@ export function GpuSelectorPanel() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">
-                {t('gpu.slotWidth')}
-              </span>
+              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                <span>{t('gpu.slotWidth')}</span>
+                <InfoTooltip content={t('gpu.tooltips.slotWidth')} />
+              </div>
               <SlotWidthBadge width={selectedGpu.slot_width} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">
-                {t('gpu.cooling')}
-              </span>
+              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                <span>{t('gpu.cooling')}</span>
+                <InfoTooltip content={t('gpu.tooltips.cooling')} />
+              </div>
               <span className="font-medium text-gray-900 dark:text-gray-100 capitalize">
-                {selectedGpu.cooling}
+                {selectedGpu.cooling === 'active'
+                  ? t('gpu.active')
+                  : t('gpu.passive')}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">
-                {t('gpu.tdp')}
-              </span>
+              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                <span>{t('gpu.tdp')}</span>
+                <InfoTooltip content={t('gpu.tooltips.tdp')} />
+              </div>
               <span className="font-medium text-gray-900 dark:text-gray-100">
                 {selectedGpu.tdp_watts}W
               </span>
