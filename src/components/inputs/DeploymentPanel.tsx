@@ -23,6 +23,56 @@ interface SliderFieldProps {
   unit?: string;
 }
 
+interface NumberInputFieldProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  onChange: (v: number) => void;
+  tooltip?: string;
+  unit?: string;
+}
+
+function NumberInputField({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  tooltip,
+  unit,
+}: NumberInputFieldProps) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
+        <span>{label}</span>
+        {tooltip && <InfoTooltip content={tooltip} />}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => {
+            const v = Number.parseInt(e.target.value, 10);
+            if (!Number.isNaN(v)) onChange(Math.max(min, Math.min(max, v)));
+          }}
+          className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 tabular-nums"
+        />
+        {unit && (
+          <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            {unit}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SliderField({
   label,
   value,
@@ -242,7 +292,7 @@ export function DeploymentPanel() {
 
           {/* VM Target — capacity plan mode only */}
           {!hasGpu && (
-            <SliderField
+            <NumberInputField
               label={t('deployment.vmTarget')}
               value={vmTarget}
               min={10}
@@ -250,6 +300,7 @@ export function DeploymentPanel() {
               step={10}
               onChange={setVmTarget}
               tooltip={t('deployment.tooltips.vmTarget')}
+              unit={t('common.vms')}
             />
           )}
 

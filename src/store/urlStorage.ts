@@ -12,6 +12,7 @@ export interface PersistedState {
   vmTarget: number;
   capacitySeries: string;
   capacityVramGb: number;
+  capacityArchitectures: string[];
   clusterType: string;
   maxVmsPerPod: number;
   podsPerSuperpod: number;

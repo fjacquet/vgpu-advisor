@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { ProfileSeries, WorkloadType } from '../types/gpu';
+import type { Architecture, ProfileSeries, WorkloadType } from '../types/gpu';
+import { ARCHITECTURE_ORDER } from '../types/gpu';
 import { loadFromUrl, saveToUrl } from './urlStorage';
 
 interface ConfigState {
@@ -37,6 +38,8 @@ interface ConfigState {
   setCapacitySeries: (series: ProfileSeries) => void;
   capacityVramGb: number;
   setCapacityVramGb: (gb: number) => void;
+  capacityArchitectures: Architecture[];
+  setCapacityArchitectures: (archs: Architecture[]) => void;
   maxVmsPerPod: number;
   setMaxVmsPerPod: (count: number) => void;
   podsPerSuperpod: number;
@@ -63,6 +66,8 @@ function getInitialState() {
     workloadType: (fromUrl?.workloadType as WorkloadType) ?? 'workstation',
     capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
     capacityVramGb: fromUrl?.capacityVramGb ?? 4,
+    capacityArchitectures:
+      (fromUrl?.capacityArchitectures as Architecture[]) ?? ARCHITECTURE_ORDER,
     maxVmsPerPod: fromUrl?.maxVmsPerPod ?? 2000,
     podsPerSuperpod: fromUrl?.podsPerSuperpod ?? 4,
     clusterType:
@@ -93,6 +98,7 @@ export const useConfigStore = create<ConfigState>()(
 
     setCapacitySeries: (series) => set({ capacitySeries: series }),
     setCapacityVramGb: (gb) => set({ capacityVramGb: gb }),
+    setCapacityArchitectures: (archs) => set({ capacityArchitectures: archs }),
     setMaxVmsPerPod: (count) => set({ maxVmsPerPod: count }),
     setPodsPerSuperpod: (count) => set({ podsPerSuperpod: count }),
 
@@ -114,6 +120,7 @@ useConfigStore.subscribe(
     workloadType: state.workloadType,
     capacitySeries: state.capacitySeries,
     capacityVramGb: state.capacityVramGb,
+    capacityArchitectures: state.capacityArchitectures,
     maxVmsPerPod: state.maxVmsPerPod,
     podsPerSuperpod: state.podsPerSuperpod,
     clusterType: state.clusterType,

@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import gpuData from '../../data/gpus.json';
 import { useConfigStore } from '../../store/configStore';
-import type { GpuCard, ProfileSeries } from '../../types/gpu';
+import type { Architecture, GpuCard, ProfileSeries } from '../../types/gpu';
+import { ARCHITECTURE_ORDER } from '../../types/gpu';
 import { AccordionItem } from '../common/AccordionItem';
 import { InfoTooltip } from '../common/InfoTooltip';
 import { SeriesCardGroup } from './SeriesCardGroup';
@@ -14,6 +15,19 @@ const SERIES_KEY_MAP: Record<ProfileSeries, keyof GpuCard> = {
   A: 'a_profile_sizes_gb',
   C: 'c_profile_sizes_gb',
 };
+
+const ARCH_SHORT_LABELS: Record<Architecture, string> = {
+  blackwell: 'Blackwell',
+  ada: 'Ada',
+  ampere: 'Ampere',
+  turing: 'Turing',
+  volta: 'Volta',
+  maxwell: 'Maxwell',
+};
+
+const AVAILABLE_ARCHITECTURES = ARCHITECTURE_ORDER.filter((arch) =>
+  ALL_GPUS.some((g) => g.architecture === arch)
+);
 
 function availableVramSizes(series: ProfileSeries): number[] {
   const key = SERIES_KEY_MAP[series];
@@ -31,7 +45,20 @@ export function CapacityFilterPanel() {
     setCapacitySeries,
     capacityVramGb,
     setCapacityVramGb,
+    capacityArchitectures,
+    setCapacityArchitectures,
   } = useConfigStore();
+
+  const toggleArchitecture = (arch: Architecture) => {
+    if (capacityArchitectures.includes(arch)) {
+      // Keep at least one selected
+      if (capacityArchitectures.length > 1) {
+        setCapacityArchitectures(capacityArchitectures.filter((a) => a !== arch));
+      }
+    } else {
+      setCapacityArchitectures([...capacityArchitectures, arch]);
+    }
+  };
 
   const vramOptions = availableVramSizes(capacitySeries);
 
@@ -70,6 +97,31 @@ export function CapacityFilterPanel() {
             activeSeries={[capacitySeries]}
             onToggle={handleSeriesChange}
           />
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            {t('capacity.selectArchitecture')}
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {AVAILABLE_ARCHITECTURES.map((arch) => {
+              const active = capacityArchitectures.includes(arch);
+              return (
+                <button
+                  key={arch}
+                  type="button"
+                  onClick={() => toggleArchitecture(arch)}
+                  className={`px-2.5 py-1 text-xs rounded-md transition-colors font-medium ${
+                    active
+                      ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {ARCH_SHORT_LABELS[arch]}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="space-y-2">

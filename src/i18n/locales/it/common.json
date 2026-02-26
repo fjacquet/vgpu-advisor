@@ -155,6 +155,7 @@
     "noGpu": "Seleziona una GPU per vedere il piano di capacità",
     "filter": "Configurazione profilo",
     "selectSeries": "Serie profilo",
+    "selectArchitecture": "Generazione GPU",
     "selectVram": "Dimensione VRAM",
     "vramTooltip": "Più VRAM = meno VM per GPU ma esperienza grafica più ricca. Scegli il minimo che soddisfa le esigenze degli utenti.",
     "gpuModel": "GPU",

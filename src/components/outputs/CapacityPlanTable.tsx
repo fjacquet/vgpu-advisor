@@ -32,6 +32,7 @@ export function CapacityPlanTable() {
     pcieSlotsPerHost,
     capacitySeries,
     capacityVramGb,
+    capacityArchitectures,
     maxVmsPerPod,
     podsPerSuperpod,
   } = useConfigStore();
@@ -40,8 +41,12 @@ export function CapacityPlanTable() {
   const superpodsNeeded = Math.ceil(podsNeeded / podsPerSuperpod);
   const vmPerPod = Math.ceil(vmTarget / podsNeeded);
 
+  const filteredGpus = ALL_GPUS.filter((g) =>
+    capacityArchitectures.includes(g.architecture)
+  );
+
   const results: ReverseAllGpusResult[] = reverseCapacityPlanAllGpus(
-    ALL_GPUS,
+    filteredGpus,
     vmPerPod,
     pcieSlotsPerHost,
     capacitySeries,
