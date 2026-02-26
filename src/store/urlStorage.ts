@@ -13,6 +13,8 @@ export interface PersistedState {
   capacitySeries: string;
   capacityVramGb: number;
   clusterType: string;
+  maxVmsPerPod: number;
+  podsPerSuperpod: number;
 }
 
 export function saveToUrl(state: PersistedState): void {

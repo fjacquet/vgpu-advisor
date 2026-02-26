@@ -32,10 +32,13 @@ export function CapacityPlanTable() {
     pcieSlotsPerHost,
     capacitySeries,
     capacityVramGb,
-    podCount,
+    maxVmsPerPod,
+    podsPerSuperpod,
   } = useConfigStore();
 
-  const vmPerPod = Math.ceil(vmTarget / podCount);
+  const podsNeeded = Math.max(1, Math.ceil(vmTarget / maxVmsPerPod));
+  const superpodsNeeded = Math.ceil(podsNeeded / podsPerSuperpod);
+  const vmPerPod = Math.ceil(vmTarget / podsNeeded);
 
   const results: ReverseAllGpusResult[] = reverseCapacityPlanAllGpus(
     ALL_GPUS,
@@ -52,12 +55,20 @@ export function CapacityPlanTable() {
       <p className="text-sm text-gray-600 dark:text-gray-400">
         {t('capacity.description')}
       </p>
-      {podCount > 1 && (
-        <p className="text-sm text-blue-600 dark:text-blue-400">
-          {t('capacity.vmsPerPod')}: {vmPerPod.toLocaleString()} (
-          {vmTarget.toLocaleString()} ÷ {podCount})
-        </p>
-      )}
+      <div className="flex flex-wrap gap-3 text-sm">
+        <span className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium">
+          {vmTarget.toLocaleString()} {t('common.vms')}
+        </span>
+        <span className="text-gray-400 dark:text-gray-500 self-center">→</span>
+        <span className="px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 font-medium">
+          {podsNeeded} {t('capacity.pods')} ({vmPerPod.toLocaleString()}{' '}
+          {t('capacity.vmsPerPodShort')})
+        </span>
+        <span className="text-gray-400 dark:text-gray-500 self-center">→</span>
+        <span className="px-2.5 py-1 rounded-md bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 font-medium">
+          {superpodsNeeded} {t('capacity.superpods')}
+        </span>
+      </div>
 
       {results.length === 0 ? (
         <div className="flex items-center justify-center h-32 text-sm text-gray-400 dark:text-gray-500">
@@ -85,9 +96,9 @@ export function CapacityPlanTable() {
                   <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
                     {t('capacity.hostsNeeded')}
                   </th>
-                  {podCount > 1 && (
+                  {podsNeeded > 1 && (
                     <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
-                      {t('capacity.totalHosts', { pods: podCount })}
+                      {t('capacity.totalHosts', { pods: podsNeeded })}
                     </th>
                   )}
                   <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
@@ -145,9 +156,9 @@ export function CapacityPlanTable() {
                       >
                         {r.hostsNeeded}
                       </td>
-                      {podCount > 1 && (
+                      {podsNeeded > 1 && (
                         <td className="px-3 py-2.5 text-right tabular-nums text-gray-800 dark:text-gray-200">
-                          {r.hostsNeeded * podCount}
+                          {r.hostsNeeded * podsNeeded}
                         </td>
                       )}
                       <td className="px-3 py-2.5 text-right tabular-nums text-gray-800 dark:text-gray-200">

@@ -64,7 +64,9 @@
     "pcieSlotsPerHost": "PCIe slots per host",
     "gpuCountPerHost": "GPUs per host",
     "hostCount": "Number of hosts",
-    "vmTarget": "VM target (cluster)",
+    "vmTarget": "Total VM target",
+    "maxVmsPerPod": "Max VMs per pod",
+    "podsPerSuperpod": "Pods per superpod",
     "clusterType": "Cluster type",
     "clusterTypes": {
       "vdi": "Horizon VDI / Nutanix AHV (≤32 hosts)",
@@ -84,7 +86,9 @@
       "gpuCountDetail": "{{cardType}} card fits {{maxCards}} cards ({{totalGpus}} GPUs) in {{slots}} slots",
       "gpuCountSimple": "Number of physical GPUs per host server",
       "hostCount": "Number of host servers in the cluster",
-      "vmTarget": "Target number of VMs for the Horizon/Citrix pod (max 20,000 per pod)"
+      "vmTarget": "Total VMs across all pods/zones. Each pod supports up to 20,000 sessions (Horizon) or 25,000 (Citrix). Max 50,000 across 25 Horizon CPA pods.",
+      "maxVmsPerPod": "Maximum VMs per Horizon pod (CPA). Horizon recommends ≤2,000 sessions per pod for optimal performance. Total pods = ceil(vmTarget ÷ this value).",
+      "podsPerSuperpod": "Number of pods grouped into a superpod (Omnissa sizing unit). Superpods = ceil(pods ÷ this value). Typical: 4 pods per superpod."
     }
   },
   "density": {
@@ -137,7 +141,12 @@
   "capacity": {
     "title": "Reverse Capacity Plan",
     "description": "How much hardware is needed to serve your target VM count?",
-    "hostsNeeded": "Hosts",
+    "hostsNeeded": "Hosts / pod",
+    "vmsPerPod": "VMs / pod",
+    "vmsPerPodShort": "VMs/pod",
+    "pods": "pods",
+    "superpods": "superpods",
+    "totalHosts": "Total hosts ({{pods}} pods)",
     "gpusNeeded": "GPUs",
     "cardsNeeded": "Cards",
     "vmsPerHost": "VMs / Host",

@@ -64,7 +64,9 @@
     "pcieSlotsPerHost": "Slot PCIe per host",
     "gpuCountPerHost": "GPU per host",
     "hostCount": "Numero di host",
-    "vmTarget": "Obiettivo VM (cluster)",
+    "vmTarget": "Obiettivo VM totale",
+    "maxVmsPerPod": "VM max per pod",
+    "podsPerSuperpod": "Pod per superpod",
     "clusterType": "Tipo di cluster",
     "clusterTypes": {
       "vdi": "Horizon VDI / Nutanix AHV (≤32 host)",
@@ -84,7 +86,9 @@
       "gpuCountDetail": "Scheda {{cardType}}: {{maxCards}} schede ({{totalGpus}} GPU) in {{slots}} slot",
       "gpuCountSimple": "Numero di GPU fisiche per server host",
       "hostCount": "Numero di server host nel cluster",
-      "vmTarget": "Numero target di VM per il pod Horizon/Citrix (max 20.000 per pod)"
+      "vmTarget": "VM totali su tutti i pod/zone. Ogni pod supporta fino a 20.000 sessioni (Horizon) o 25.000 (Citrix). Max 50.000 su 25 pod CPA Horizon.",
+      "maxVmsPerPod": "VM massime per pod Horizon (CPA). Omnissa raccomanda ≤2.000 sessioni per pod. Pod = ceil(target VM ÷ questo valore).",
+      "podsPerSuperpod": "Numero di pod raggruppati in un superpod (unità di sizing Omnissa). Superpod = ceil(pod ÷ questo valore). Tipico: 4 pod per superpod."
     }
   },
   "density": {
@@ -137,7 +141,12 @@
   "capacity": {
     "title": "Piano di capacità inverso",
     "description": "Quanta infrastruttura è necessaria per servire il numero target di VM?",
-    "hostsNeeded": "Host",
+    "hostsNeeded": "Host / pod",
+    "vmsPerPod": "VM / pod",
+    "vmsPerPodShort": "VM/pod",
+    "pods": "pod",
+    "superpods": "superpod",
+    "totalHosts": "Host totali ({{pods}} pod)",
     "gpusNeeded": "GPU",
     "cardsNeeded": "Schede",
     "vmsPerHost": "VM / host",

@@ -37,6 +37,10 @@ interface ConfigState {
   setCapacitySeries: (series: ProfileSeries) => void;
   capacityVramGb: number;
   setCapacityVramGb: (gb: number) => void;
+  maxVmsPerPod: number;
+  setMaxVmsPerPod: (count: number) => void;
+  podsPerSuperpod: number;
+  setPodsPerSuperpod: (count: number) => void;
 
   // UI state
   activeTab: 'profiles' | 'density' | 'recommendations' | 'config';
@@ -59,6 +63,8 @@ function getInitialState() {
     workloadType: (fromUrl?.workloadType as WorkloadType) ?? 'workstation',
     capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
     capacityVramGb: fromUrl?.capacityVramGb ?? 4,
+    maxVmsPerPod: fromUrl?.maxVmsPerPod ?? 2000,
+    podsPerSuperpod: fromUrl?.podsPerSuperpod ?? 4,
     clusterType:
       (fromUrl?.clusterType as 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp') ??
       'vdi',
@@ -87,6 +93,8 @@ export const useConfigStore = create<ConfigState>()(
 
     setCapacitySeries: (series) => set({ capacitySeries: series }),
     setCapacityVramGb: (gb) => set({ capacityVramGb: gb }),
+    setMaxVmsPerPod: (count) => set({ maxVmsPerPod: count }),
+    setPodsPerSuperpod: (count) => set({ podsPerSuperpod: count }),
 
     setClusterType: (type) => set({ clusterType: type }),
 
@@ -106,6 +114,8 @@ useConfigStore.subscribe(
     workloadType: state.workloadType,
     capacitySeries: state.capacitySeries,
     capacityVramGb: state.capacityVramGb,
+    maxVmsPerPod: state.maxVmsPerPod,
+    podsPerSuperpod: state.podsPerSuperpod,
     clusterType: state.clusterType,
   }),
   (state) => {

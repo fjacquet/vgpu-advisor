@@ -78,8 +78,10 @@ export function DeploymentPanel() {
     setWorkloadType,
     clusterType,
     setClusterType,
-    podCount,
-    setPodCount,
+    maxVmsPerPod,
+    setMaxVmsPerPod,
+    podsPerSuperpod,
+    setPodsPerSuperpod,
   } = useConfigStore();
 
   const hasGpu = !!selectedGpuId;
@@ -238,29 +240,38 @@ export function DeploymentPanel() {
             </>
           )}
 
-          {/* VM Target + Pod Count — capacity plan mode only */}
+          {/* VM Target — capacity plan mode only */}
           {!hasGpu && (
-            <>
-              <SliderField
-                label={t('deployment.vmTarget')}
-                value={vmTarget}
-                min={10}
-                max={50000}
-                step={10}
-                onChange={setVmTarget}
-                tooltip={t('deployment.tooltips.vmTarget')}
-              />
-              <SliderField
-                label={t('deployment.podCount')}
-                value={podCount}
-                min={1}
-                max={25}
-                step={1}
-                onChange={setPodCount}
-                tooltip={t('deployment.tooltips.podCount')}
-              />
-            </>
+            <SliderField
+              label={t('deployment.vmTarget')}
+              value={vmTarget}
+              min={10}
+              max={50000}
+              step={10}
+              onChange={setVmTarget}
+              tooltip={t('deployment.tooltips.vmTarget')}
+            />
           )}
+
+          {/* Pod / Superpod config — always visible */}
+          <SliderField
+            label={t('deployment.maxVmsPerPod')}
+            value={maxVmsPerPod}
+            min={100}
+            max={10000}
+            step={100}
+            onChange={setMaxVmsPerPod}
+            tooltip={t('deployment.tooltips.maxVmsPerPod')}
+          />
+          <SliderField
+            label={t('deployment.podsPerSuperpod')}
+            value={podsPerSuperpod}
+            min={1}
+            max={10}
+            step={1}
+            onChange={setPodsPerSuperpod}
+            tooltip={t('deployment.tooltips.podsPerSuperpod')}
+          />
         </div>
       </div>
     </AccordionItem>
