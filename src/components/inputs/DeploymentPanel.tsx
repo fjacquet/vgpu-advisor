@@ -9,6 +9,7 @@ const CLUSTER_HOST_MAX: Record<string, number> = {
   vdi: 32,
   vsphere8: 64,
   vsphere9: 128,
+  ocp: 64,
 };
 
 interface SliderFieldProps {
@@ -99,7 +100,7 @@ export function DeploymentPanel() {
     'compute',
   ];
 
-  const CLUSTER_TYPES = ['vdi', 'vsphere8', 'vsphere9'] as const;
+  const CLUSTER_TYPES = ['vdi', 'vsphere8', 'vsphere9', 'ocp'] as const;
 
   const handleClusterTypeChange = (ct: (typeof CLUSTER_TYPES)[number]) => {
     setClusterType(ct);

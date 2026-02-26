@@ -57,7 +57,8 @@
     "clusterTypes": {
       "vdi": "Horizon VDI (≤32 Hosts)",
       "vsphere8": "vSphere 8 max (≤64 Hosts)",
-      "vsphere9": "vSphere 9 max (≤128 Hosts)"
+      "vsphere9": "vSphere 9 max (≤128 Hosts)",
+      "ocp": "OpenShift Virtualization (≤64 Nodes)"
     },
     "workloadType": "Workload-Typ",
     "workloads": {

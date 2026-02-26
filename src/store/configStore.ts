@@ -29,8 +29,8 @@ interface ConfigState {
   workloadType: WorkloadType;
   setWorkloadType: (type: WorkloadType) => void;
 
-  clusterType: 'vdi' | 'vsphere8' | 'vsphere9';
-  setClusterType: (type: 'vdi' | 'vsphere8' | 'vsphere9') => void;
+  clusterType: 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp';
+  setClusterType: (type: 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp') => void;
 
   // Capacity Plan profile selection (no-GPU mode)
   capacitySeries: ProfileSeries;
@@ -60,7 +60,8 @@ function getInitialState() {
     capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
     capacityVramGb: fromUrl?.capacityVramGb ?? 4,
     clusterType:
-      (fromUrl?.clusterType as 'vdi' | 'vsphere8' | 'vsphere9') ?? 'vdi',
+      (fromUrl?.clusterType as 'vdi' | 'vsphere8' | 'vsphere9' | 'ocp') ??
+      'vdi',
   };
 }
 
