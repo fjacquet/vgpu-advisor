@@ -27,12 +27,19 @@ function UtilizationBar({ value }: { value: number }) {
 
 export function CapacityPlanTable() {
   const { t } = useTranslation();
-  const { vmTarget, pcieSlotsPerHost, capacitySeries, capacityVramGb } =
-    useConfigStore();
+  const {
+    vmTarget,
+    pcieSlotsPerHost,
+    capacitySeries,
+    capacityVramGb,
+    podCount,
+  } = useConfigStore();
+
+  const vmPerPod = Math.ceil(vmTarget / podCount);
 
   const results: ReverseAllGpusResult[] = reverseCapacityPlanAllGpus(
     ALL_GPUS,
-    vmTarget,
+    vmPerPod,
     pcieSlotsPerHost,
     capacitySeries,
     capacityVramGb
@@ -45,6 +52,12 @@ export function CapacityPlanTable() {
       <p className="text-sm text-gray-600 dark:text-gray-400">
         {t('capacity.description')}
       </p>
+      {podCount > 1 && (
+        <p className="text-sm text-blue-600 dark:text-blue-400">
+          {t('capacity.vmsPerPod')}: {vmPerPod.toLocaleString()} (
+          {vmTarget.toLocaleString()} ÷ {podCount})
+        </p>
+      )}
 
       {results.length === 0 ? (
         <div className="flex items-center justify-center h-32 text-sm text-gray-400 dark:text-gray-500">
@@ -72,6 +85,11 @@ export function CapacityPlanTable() {
                   <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
                     {t('capacity.hostsNeeded')}
                   </th>
+                  {podCount > 1 && (
+                    <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
+                      {t('capacity.totalHosts', { pods: podCount })}
+                    </th>
+                  )}
                   <th className="px-3 py-2.5 font-medium text-gray-700 dark:text-gray-300 text-right">
                     {t('capacity.gpusNeeded')}
                   </th>
@@ -127,6 +145,11 @@ export function CapacityPlanTable() {
                       >
                         {r.hostsNeeded}
                       </td>
+                      {podCount > 1 && (
+                        <td className="px-3 py-2.5 text-right tabular-nums text-gray-800 dark:text-gray-200">
+                          {r.hostsNeeded * podCount}
+                        </td>
+                      )}
                       <td className="px-3 py-2.5 text-right tabular-nums text-gray-800 dark:text-gray-200">
                         {r.gpusNeeded}
                       </td>

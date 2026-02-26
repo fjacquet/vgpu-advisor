@@ -78,6 +78,8 @@ export function DeploymentPanel() {
     setWorkloadType,
     clusterType,
     setClusterType,
+    podCount,
+    setPodCount,
   } = useConfigStore();
 
   const hasGpu = !!selectedGpuId;
@@ -236,17 +238,28 @@ export function DeploymentPanel() {
             </>
           )}
 
-          {/* VM Target — capacity plan mode only */}
+          {/* VM Target + Pod Count — capacity plan mode only */}
           {!hasGpu && (
-            <SliderField
-              label={t('deployment.vmTarget')}
-              value={vmTarget}
-              min={10}
-              max={20000}
-              step={10}
-              onChange={setVmTarget}
-              tooltip={t('deployment.tooltips.vmTarget')}
-            />
+            <>
+              <SliderField
+                label={t('deployment.vmTarget')}
+                value={vmTarget}
+                min={10}
+                max={50000}
+                step={10}
+                onChange={setVmTarget}
+                tooltip={t('deployment.tooltips.vmTarget')}
+              />
+              <SliderField
+                label={t('deployment.podCount')}
+                value={podCount}
+                min={1}
+                max={25}
+                step={1}
+                onChange={setPodCount}
+                tooltip={t('deployment.tooltips.podCount')}
+              />
+            </>
           )}
         </div>
       </div>
