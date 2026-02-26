@@ -63,7 +63,11 @@ export function PrintView() {
   const cardsPerHost = Math.floor(pcieSlotsPerHost / selectedGpu.slot_width);
   const gpusPerHost = cardsPerHost * selectedGpu.gpu_count_per_card;
 
-  const RANK_LABELS = ['🥇 Best', '🥈 Runner-up', '🥉 Alternative'];
+  const RANK_LABELS = [
+    `🥇 ${t('recommendations.rank1')}`,
+    `🥈 ${t('recommendations.rank2')}`,
+    `🥉 ${t('recommendations.rank3')}`,
+  ];
 
   return (
     <div
@@ -100,7 +104,7 @@ export function PrintView() {
                   width: '40%',
                 }}
               >
-                GPU
+                {t('capacity.gpuModel')}
               </td>
               <td style={{ padding: '4px 0' }}>
                 {selectedGpu.model} ({selectedGpu.architecture},{' '}
@@ -141,7 +145,7 @@ export function PrintView() {
             </tr>
             <tr>
               <td style={{ padding: '4px 8px 4px 0', fontWeight: 600 }}>
-                Generated
+                {t('print.generated')}
               </td>
               <td style={{ padding: '4px 0' }}>
                 {new Date().toISOString().split('T')[0]}
@@ -178,7 +182,7 @@ export function PrintView() {
                   border: '1px solid #d1d5db',
                 }}
               >
-                Profile
+                {t('print.profile')}
               </th>
               <th
                 style={{
@@ -311,7 +315,7 @@ export function PrintView() {
                   border: '1px solid #d1d5db',
                 }}
               >
-                Profile
+                {t('print.profile')}
               </th>
               <th
                 style={{
@@ -445,7 +449,7 @@ export function PrintView() {
                   border: '1px solid #d1d5db',
                 }}
               >
-                Rank
+                {t('print.rank')}
               </th>
               <th
                 style={{
@@ -454,7 +458,7 @@ export function PrintView() {
                   border: '1px solid #d1d5db',
                 }}
               >
-                Profile
+                {t('print.profile')}
               </th>
               <th
                 style={{

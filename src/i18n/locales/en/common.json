@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "vGPU Advisor",
-    "subtitle": "NVIDIA vGPU Profile Calculator for Omnissa Horizon",
+    "subtitle": "NVIDIA vGPU Profile Calculator for Omnissa Horizon & Citrix",
     "tagline": "Select the right vGPU profile for your VDI deployment"
   },
   "nav": {
@@ -163,6 +163,9 @@
     "vms": "VMs"
   },
   "print": {
-    "button": "Print"
+    "button": "Print",
+    "rank": "Rank",
+    "profile": "Profile",
+    "generated": "Generated"
   }
 }

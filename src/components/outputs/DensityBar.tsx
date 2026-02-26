@@ -138,7 +138,11 @@ export function DensityBar() {
               }}
               formatter={(value: number, name: string) => [value, name]}
             />
-            <Bar dataKey="perCluster" name="VMs/cluster" radius={[3, 3, 0, 0]}>
+            <Bar
+              dataKey="perCluster"
+              name={t('density.perCluster')}
+              radius={[3, 3, 0, 0]}
+            >
               {chartData.map((entry) => (
                 <Cell
                   key={entry.name}

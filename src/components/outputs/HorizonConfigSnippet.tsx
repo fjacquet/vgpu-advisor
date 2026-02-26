@@ -162,7 +162,7 @@ export function HorizonConfigSnippet() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Copied!
+              {t('profiles.copied')}
             </>
           ) : (
             <>
