@@ -24,7 +24,12 @@
     "sw": "Singola larghezza",
     "dw": "Doppia larghezza",
     "active": "Attivo",
-    "passive": "Passivo"
+    "passive": "Passivo",
+    "tooltips": {
+      "slotWidth": "SW = Singola larghezza (1 slot PCIe). DW = Doppia larghezza (2 slot PCIe). Determina quante schede entrano per host.",
+      "cooling": "Attivo: la scheda ha ventole proprie. Passivo: dipende dal flusso d'aria del chassis — verificare che la ventilazione del server sia adeguata.",
+      "tdp": "Dissipazione termica massima in watt per scheda. Verificare che l'alimentatore e il raffreddamento del server possano supportare questo valore."
+    }
   },
   "profiles": {
     "filter": "Filtro profili",
@@ -38,8 +43,15 @@
     "resolution": "Risoluzione max",
     "license": "Licenza",
     "fps": "FPS max",
+    "available": "{{count}} profili disponibili per {{gpu}}",
+    "vramUtil": "Utilizzo VRAM ({{instances}}×{{vram}}GB)",
     "copy": "Copia",
-    "copied": "Copiato!"
+    "copied": "Copiato!",
+    "tooltips": {
+      "framebufferUtil": "Percentuale di VRAM GPU utilizzata con la configurazione di slot attuale. Più alto = più efficiente. Verde = 100%, Giallo ≥80%, Blu <80%.",
+      "maxInstances": "Massimo di VM che condividono una GPU fisica a questa dimensione di profilo (limite hardware)",
+      "license": "Livello di licenza software NVIDIA vGPU richiesto per questo profilo"
+    }
   },
   "series": {
     "Q": "vWS (Q) — Workstation",
@@ -55,7 +67,7 @@
     "vmTarget": "Obiettivo VM (cluster)",
     "clusterType": "Tipo di cluster",
     "clusterTypes": {
-      "vdi": "Horizon VDI (≤32 host)",
+      "vdi": "Horizon VDI / Nutanix AHV (≤32 host)",
       "vsphere8": "vSphere 8 max (≤64 host)",
       "vsphere9": "vSphere 9 max (≤128 host)",
       "ocp": "OpenShift Virtualization (≤64 nodi)"
@@ -84,13 +96,33 @@
     "gpusPerHost": "GPU per host",
     "framebuffer": "Utilizzo framebuffer",
     "totalVram": "VRAM totale/host",
-    "noProfile": "Seleziona una GPU e un profilo per vedere i calcoli di densità"
+    "hostsInCluster": "Host nel cluster",
+    "chartTitle": "VM per cluster per profilo",
+    "max": "max",
+    "noProfile": "Seleziona una GPU e un profilo per vedere i calcoli di densità",
+    "tooltips": {
+      "perGpu": "Massimo di VM che condividono una GPU fisica in base alla dimensione del framebuffer del profilo",
+      "perHost": "VM per GPU × GPU per host",
+      "perCluster": "VM per host × numero di host nel cluster",
+      "framebufferUtil": "VRAM GPU utilizzata: istanze × VRAM profilo ÷ VRAM totale per GPU. Verde = 100% (ottimale), Giallo ≥80%, Blu <80%."
+    }
   },
   "recommendations": {
     "title": "Raccomandazioni",
     "topProfile": "Profilo migliore",
     "score": "Punteggio di idoneità",
     "reasoning": "Perché questo profilo",
+    "showingTop": "{{count}} migliori profili per carico {{workload}} su {{gpu}}",
+    "rank1": "Migliore",
+    "rank2": "Secondo",
+    "rank3": "Alternativa",
+    "perGpu": "per GPU",
+    "perHost": "per host",
+    "perCluster": "VM/cluster",
+    "vramLabel": "VRAM",
+    "tooltips": {
+      "ranking": "I profili sono valutati per idoneità al carico: allocazione VRAM, numero di display, margine FPS e corrispondenza di serie. Modificare il tipo di carico nella barra laterale per cambiare la classifica."
+    },
     "noGpu": "Seleziona una GPU per ottenere raccomandazioni"
   },
   "config": {

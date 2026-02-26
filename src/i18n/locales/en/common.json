@@ -24,7 +24,12 @@
     "sw": "Single-Width",
     "dw": "Double-Width",
     "active": "Active",
-    "passive": "Passive"
+    "passive": "Passive",
+    "tooltips": {
+      "slotWidth": "SW = Single-Width (1 PCIe slot). DW = Double-Width (2 PCIe slots). Affects how many cards fit per host.",
+      "cooling": "Active: card has its own fans. Passive: relies entirely on chassis airflow — verify server airflow is adequate.",
+      "tdp": "Maximum heat output in watts per card. Verify server power supply and cooling budget can accommodate this value."
+    }
   },
   "profiles": {
     "filter": "Profile Filter",
@@ -38,8 +43,15 @@
     "resolution": "Max Resolution",
     "license": "License",
     "fps": "Max FPS",
+    "available": "{{count}} profiles available for {{gpu}}",
+    "vramUtil": "VRAM utilization ({{instances}}×{{vram}}GB)",
     "copy": "Copy",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "tooltips": {
+      "framebufferUtil": "Percentage of GPU VRAM used with your current slot config. Higher = more efficient packing. Green = 100%, Yellow ≥80%, Blue <80%.",
+      "maxInstances": "Maximum VMs sharing one physical GPU at this profile size (hardware limit)",
+      "license": "NVIDIA vGPU software license tier required to use this profile"
+    }
   },
   "series": {
     "Q": "vWS (Q) — Workstation",
@@ -55,7 +67,7 @@
     "vmTarget": "VM target (cluster)",
     "clusterType": "Cluster type",
     "clusterTypes": {
-      "vdi": "Horizon VDI (≤32 hosts)",
+      "vdi": "Horizon VDI / Nutanix AHV (≤32 hosts)",
       "vsphere8": "vSphere 8 max (≤64 hosts)",
       "vsphere9": "vSphere 9 max (≤128 hosts)",
       "ocp": "OpenShift Virtualization (≤64 nodes)"
@@ -84,13 +96,33 @@
     "gpusPerHost": "GPUs per host",
     "framebuffer": "Framebuffer utilization",
     "totalVram": "Total VRAM/host",
-    "noProfile": "Select a GPU and profile to see density calculations"
+    "hostsInCluster": "Hosts in cluster",
+    "chartTitle": "VMs per cluster by profile",
+    "max": "max",
+    "noProfile": "Select a GPU and profile to see density calculations",
+    "tooltips": {
+      "perGpu": "Maximum VMs sharing one physical GPU given the profile framebuffer size",
+      "perHost": "VMs per GPU × GPUs per host",
+      "perCluster": "VMs per host × number of hosts in the cluster",
+      "framebufferUtil": "GPU VRAM used: instances × profile VRAM ÷ total VRAM per GPU. Green = 100% (perfectly packed), Yellow ≥80%, Blue <80%."
+    }
   },
   "recommendations": {
     "title": "Recommendations",
     "topProfile": "Top Profile",
     "score": "Fit score",
     "reasoning": "Why this profile",
+    "showingTop": "Showing top {{count}} profiles for {{workload}} workload on {{gpu}}",
+    "rank1": "Best",
+    "rank2": "Runner-up",
+    "rank3": "Alternative",
+    "perGpu": "per GPU",
+    "perHost": "per host",
+    "perCluster": "VMs/cluster",
+    "vramLabel": "VRAM",
+    "tooltips": {
+      "ranking": "Profiles are scored by workload fit: VRAM allocation, display count, FPS headroom, and series match. Adjust workload type in the sidebar to change ranking."
+    },
     "noGpu": "Select a GPU to get recommendations"
   },
   "config": {

@@ -5,6 +5,7 @@ import { calculateDensity } from '../../engines/densityEngine';
 import { useFilteredProfiles } from '../../hooks/useFilteredProfiles';
 import { useConfigStore } from '../../store/configStore';
 import type { GpuCard, VgpuProfile } from '../../types/gpu';
+import { InfoTooltip } from '../common/InfoTooltip';
 import { SeriesBadge } from '../common/SeriesBadge';
 
 interface ProfileCardProps {
@@ -111,8 +112,9 @@ function ProfileCard({ profile, gpu }: ProfileCardProps) {
           </div>
         </div>
         <div className="bg-gray-50 dark:bg-gray-800 rounded p-2">
-          <div className="text-gray-500 dark:text-gray-400">
-            {t('profiles.instances')}
+          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <span>{t('profiles.instances')}</span>
+            <InfoTooltip content={t('profiles.tooltips.maxInstances')} />
           </div>
           <div className="font-semibold text-gray-900 dark:text-gray-100">
             {profile.maxInstances}
@@ -139,9 +141,15 @@ function ProfileCard({ profile, gpu }: ProfileCardProps) {
       {/* Framebuffer utilization bar */}
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-          <span>
-            VRAM utilization ({density.instancesPerGpu}×{profile.vram_gb}GB)
-          </span>
+          <div className="flex items-center gap-1">
+            <span>
+              {t('profiles.vramUtil', {
+                instances: density.instancesPerGpu,
+                vram: profile.vram_gb,
+              })}
+            </span>
+            <InfoTooltip content={t('profiles.tooltips.framebufferUtil')} />
+          </div>
           <span>{utilizationPct}%</span>
         </div>
         <div className="h-1.5 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
@@ -159,9 +167,10 @@ function ProfileCard({ profile, gpu }: ProfileCardProps) {
       </div>
 
       {/* License */}
-      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        {t('profiles.license')}:{' '}
+      <div className="mt-2 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+        <span>{t('profiles.license')}:</span>
         <span className="font-medium">{profile.license}</span>
+        <InfoTooltip content={t('profiles.tooltips.license')} />
       </div>
     </div>
   );
@@ -207,7 +216,10 @@ export function ProfileGrid() {
   return (
     <div>
       <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">
-        {profiles.length} profiles available for {selectedGpu.model}
+        {t('profiles.available', {
+          count: profiles.length,
+          gpu: selectedGpu.model,
+        })}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {profiles.map((profile) => (
