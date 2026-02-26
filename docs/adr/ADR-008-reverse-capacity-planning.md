@@ -1,7 +1,7 @@
 # ADR-008 — Reverse Capacity Planning Tab
 
 **Date:** 2026-02-25
-**Status:** Accepted
+**Status:** Superseded by [ADR-009](ADR-009-auto-mode-ui.md)
 **Deciders:** fjacquet
 
 ---

@@ -168,8 +168,8 @@ export function DeploymentPanel() {
             onChange={setPcieSlotsPerHost}
             tooltip={
               selectedGpu?.slot_width === 1
-                ? 'Single-width cards: max 6 cards × 1 slot = 6 PCIe slots'
-                : 'Double-width cards: max 4 cards × 2 slots = 8 PCIe slots'
+                ? t('deployment.tooltips.pcieSlotsSwMax')
+                : t('deployment.tooltips.pcieSlotsDwMax')
             }
           />
 
@@ -184,8 +184,17 @@ export function DeploymentPanel() {
                 onChange={setGpuCountPerHost}
                 tooltip={
                   selectedGpu
-                    ? `${selectedGpu.slot_width === 2 ? 'Double-width' : 'Single-width'} card fits ${maxCardsFromSlots} cards (${maxCardsFromSlots * selectedGpu.gpu_count_per_card} GPUs) in ${pcieSlotsPerHost} slots`
-                    : 'Number of physical GPUs per host server'
+                    ? t('deployment.tooltips.gpuCountDetail', {
+                        cardType:
+                          selectedGpu.slot_width === 2
+                            ? t('gpu.dw')
+                            : t('gpu.sw'),
+                        maxCards: maxCardsFromSlots,
+                        totalGpus:
+                          maxCardsFromSlots * selectedGpu.gpu_count_per_card,
+                        slots: pcieSlotsPerHost,
+                      })
+                    : t('deployment.tooltips.gpuCountSimple')
                 }
               />
 
@@ -222,7 +231,7 @@ export function DeploymentPanel() {
                 min={1}
                 max={maxHosts}
                 onChange={setHostCount}
-                tooltip="Number of ESXi host servers in the cluster"
+                tooltip={t('deployment.tooltips.hostCount')}
               />
             </>
           )}
@@ -236,7 +245,7 @@ export function DeploymentPanel() {
               max={20000}
               step={10}
               onChange={setVmTarget}
-              tooltip="Target number of VMs for the Horizon pod (max 20,000 per pod)"
+              tooltip={t('deployment.tooltips.vmTarget')}
             />
           )}
         </div>

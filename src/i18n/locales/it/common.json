@@ -65,6 +65,14 @@
       "workstation": "Workstation professionale (CAD/3D)",
       "knowledge_worker": "Knowledge Worker (Ufficio)",
       "compute": "IA / Compute"
+    },
+    "tooltips": {
+      "pcieSlotsSwMax": "Schede singola larghezza: max 6 schede × 1 slot = 6 slot PCIe",
+      "pcieSlotsDwMax": "Schede doppia larghezza: max 4 schede × 2 slot = 8 slot PCIe",
+      "gpuCountDetail": "Scheda {{cardType}}: {{maxCards}} schede ({{totalGpus}} GPU) in {{slots}} slot",
+      "gpuCountSimple": "Numero di GPU fisiche per server host",
+      "hostCount": "Numero di server host nel cluster",
+      "vmTarget": "Numero target di VM per il pod Horizon/Citrix (max 20.000 per pod)"
     }
   },
   "density": {
