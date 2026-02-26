@@ -29,6 +29,9 @@ interface ConfigState {
   workloadType: WorkloadType;
   setWorkloadType: (type: WorkloadType) => void;
 
+  clusterType: 'vdi' | 'vsphere8' | 'vsphere9';
+  setClusterType: (type: 'vdi' | 'vsphere8' | 'vsphere9') => void;
+
   // Capacity Plan profile selection (no-GPU mode)
   capacitySeries: ProfileSeries;
   setCapacitySeries: (series: ProfileSeries) => void;
@@ -56,6 +59,8 @@ function getInitialState() {
     workloadType: (fromUrl?.workloadType as WorkloadType) ?? 'workstation',
     capacitySeries: (fromUrl?.capacitySeries as ProfileSeries) ?? 'Q',
     capacityVramGb: fromUrl?.capacityVramGb ?? 4,
+    clusterType:
+      (fromUrl?.clusterType as 'vdi' | 'vsphere8' | 'vsphere9') ?? 'vdi',
   };
 }
 
@@ -82,6 +87,8 @@ export const useConfigStore = create<ConfigState>()(
     setCapacitySeries: (series) => set({ capacitySeries: series }),
     setCapacityVramGb: (gb) => set({ capacityVramGb: gb }),
 
+    setClusterType: (type) => set({ clusterType: type }),
+
     setActiveTab: (tab) => set({ activeTab: tab }),
   }))
 );
@@ -98,6 +105,7 @@ useConfigStore.subscribe(
     workloadType: state.workloadType,
     capacitySeries: state.capacitySeries,
     capacityVramGb: state.capacityVramGb,
+    clusterType: state.clusterType,
   }),
   (state) => {
     saveToUrl(state);

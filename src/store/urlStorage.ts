@@ -12,6 +12,7 @@ export interface PersistedState {
   vmTarget: number;
   capacitySeries: string;
   capacityVramGb: number;
+  clusterType: string;
 }
 
 export function saveToUrl(state: PersistedState): void {

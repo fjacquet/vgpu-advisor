@@ -53,6 +53,12 @@
     "gpuCountPerHost": "GPUs par hôte",
     "hostCount": "Nombre d'hôtes",
     "vmTarget": "Cible VMs (cluster)",
+    "clusterType": "Type de cluster",
+    "clusterTypes": {
+      "vdi": "Horizon VDI (≤32 hôtes)",
+      "vsphere8": "vSphere 8 max (≤64 hôtes)",
+      "vsphere9": "vSphere 9 max (≤128 hôtes)"
+    },
     "workloadType": "Type de charge de travail",
     "workloads": {
       "workstation": "Station de travail professionnelle (CAO/3D)",

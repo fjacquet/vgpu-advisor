@@ -53,6 +53,12 @@
     "gpuCountPerHost": "GPU per host",
     "hostCount": "Numero di host",
     "vmTarget": "Obiettivo VM (cluster)",
+    "clusterType": "Tipo di cluster",
+    "clusterTypes": {
+      "vdi": "Horizon VDI (≤32 host)",
+      "vsphere8": "vSphere 8 max (≤64 host)",
+      "vsphere9": "vSphere 9 max (≤128 host)"
+    },
     "workloadType": "Tipo di carico di lavoro",
     "workloads": {
       "workstation": "Workstation professionale (CAD/3D)",
