@@ -53,7 +53,9 @@ export function CapacityFilterPanel() {
     if (capacityArchitectures.includes(arch)) {
       // Keep at least one selected
       if (capacityArchitectures.length > 1) {
-        setCapacityArchitectures(capacityArchitectures.filter((a) => a !== arch));
+        setCapacityArchitectures(
+          capacityArchitectures.filter((a) => a !== arch)
+        );
       }
     } else {
       setCapacityArchitectures([...capacityArchitectures, arch]);
