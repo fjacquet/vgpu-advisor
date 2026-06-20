@@ -1,5 +1,8 @@
 # vGPU Advisor
 
+[![CI](https://github.com/fjacquet/vgpu-advisor/actions/workflows/ci.yml/badge.svg)](https://github.com/fjacquet/vgpu-advisor/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/fjacquet/vgpu-advisor?sort=semver)](https://github.com/fjacquet/vgpu-advisor/releases/latest)
+
 **NVIDIA vGPU Profile Calculator for Omnissa Horizon**
 
 A static, zero-backend single-page application that helps Horizon administrators
