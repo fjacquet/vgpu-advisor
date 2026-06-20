@@ -22,6 +22,28 @@
     "c_profile_sizes_gb": [4, 6, 8, 12, 16, 24, 32, 48, 96]
   },
   {
+    "id": "rtx-pro-4500-blackwell",
+    "model": "NVIDIA RTX PRO 4500 Blackwell",
+    "architecture": "blackwell",
+    "vram_gb": 32,
+    "gpu_count_per_card": 1,
+    "slot_width": 1,
+    "cooling": "active",
+    "form_factor": "full-height",
+    "mig_capable": true,
+    "tdp_watts": 165,
+    "fp32_tflops": 51.0,
+    "memory_bandwidth_gbps": 800,
+    "cuda_cores": 10496,
+    "nvenc_count": 3,
+    "nvdec_count": 3,
+    "notes": "Blackwell mainstream server GPU: 32GB GDDR7, 800 GB/s, single-slot 165W, MIG (2× 16GB), 3× NVENC (9th gen) + 3× NVDEC (6th gen)",
+    "q_profile_sizes_gb": [2, 3, 4, 6, 8, 16, 32],
+    "b_profile_sizes_gb": [1, 2],
+    "a_profile_sizes_gb": [2, 3, 4, 6, 8, 16, 32],
+    "c_profile_sizes_gb": [4, 6, 8, 16, 32]
+  },
+  {
     "id": "l40s",
     "model": "NVIDIA L40S",
     "architecture": "ada",
