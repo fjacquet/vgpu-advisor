@@ -24,15 +24,19 @@
 
 @media print {
   .no-print {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the screen-side Tailwind utility */
     display: none !important;
   }
 
   .print-only {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the screen-side Tailwind utility */
     display: block !important;
   }
 
   body {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the screen-side Tailwind utility */
     background: white !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the screen-side Tailwind utility */
     color: black !important;
   }
 
