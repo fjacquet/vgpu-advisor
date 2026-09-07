@@ -136,7 +136,7 @@ export function DensityBar() {
                 color: '#f9fafb',
                 fontSize: '12px',
               }}
-              formatter={(value: number, name: string) => [value, name]}
+              formatter={(value, name) => [value, name]}
             />
             <Bar
               dataKey="perCluster"
