@@ -9,6 +9,10 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+
+- Lockfile refresh: `source-map-js` 1.2.1 → 1.2.2 (GHSA-68fv-2mgg-jv7q, dev-only).
+
 ### Added
 
 #### Citrix / XenServer Config Toggle (ADR-007)
